@@ -1,0 +1,61 @@
+[
+  { "name": "Mexico", "code": "MEX", "group": "A", "flagUrl": "/flags/mex.svg" },
+  { "name": "South Africa", "code": "RSA", "group": "A", "flagUrl": "/flags/rsa.svg" },
+  { "name": "South Korea", "code": "KOR", "group": "A", "flagUrl": "/flags/kor.svg" },
+  { "name": "Czech Republic", "code": "CZE", "group": "A", "flagUrl": "/flags/cze.svg" },
+
+  { "name": "Canada", "code": "CAN", "group": "B", "flagUrl": "/flags/can.svg" },
+  { "name": "Bosnia and Herzegovina", "code": "BIH", "group": "B", "flagUrl": "/flags/bih.svg" },
+  { "name": "Qatar", "code": "QAT", "group": "B", "flagUrl": "/flags/qat.svg" },
+  { "name": "Switzerland", "code": "SUI", "group": "B", "flagUrl": "/flags/sui.svg" },
+
+  { "name": "Brazil", "code": "BRA", "group": "C", "flagUrl": "/flags/bra.svg" },
+  { "name": "Morocco", "code": "MAR", "group": "C", "flagUrl": "/flags/mar.svg" },
+  { "name": "Haiti", "code": "HAI", "group": "C", "flagUrl": "/flags/hai.svg" },
+  { "name": "Scotland", "code": "SCO", "group": "C", "flagUrl": "/flags/sco.svg" },
+
+  { "name": "United States", "code": "USA", "group": "D", "flagUrl": "/flags/usa.svg" },
+  { "name": "Paraguay", "code": "PAR", "group": "D", "flagUrl": "/flags/par.svg" },
+  { "name": "Australia", "code": "AUS", "group": "D", "flagUrl": "/flags/aus.svg" },
+  { "name": "Turkey", "code": "TUR", "group": "D", "flagUrl": "/flags/tur.svg" },
+
+  { "name": "Germany", "code": "GER", "group": "E", "flagUrl": "/flags/ger.svg" },
+  { "name": "Curaçao", "code": "CUW", "group": "E", "flagUrl": "/flags/cuw.svg" },
+  { "name": "Ivory Coast", "code": "CIV", "group": "E", "flagUrl": "/flags/civ.svg" },
+  { "name": "Ecuador", "code": "ECU", "group": "E", "flagUrl": "/flags/ecu.svg" },
+
+  { "name": "Netherlands", "code": "NED", "group": "F", "flagUrl": "/flags/ned.svg" },
+  { "name": "Japan", "code": "JPN", "group": "F", "flagUrl": "/flags/jpn.svg" },
+  { "name": "Sweden", "code": "SWE", "group": "F", "flagUrl": "/flags/swe.svg" },
+  { "name": "Tunisia", "code": "TUN", "group": "F", "flagUrl": "/flags/tun.svg" },
+
+  { "name": "Belgium", "code": "BEL", "group": "G", "flagUrl": "/flags/bel.svg" },
+  { "name": "Egypt", "code": "EGY", "group": "G", "flagUrl": "/flags/egy.svg" },
+  { "name": "Iran", "code": "IRN", "group": "G", "flagUrl": "/flags/irn.svg" },
+  { "name": "New Zealand", "code": "NZL", "group": "G", "flagUrl": "/flags/nzl.svg" },
+
+  { "name": "Spain", "code": "ESP", "group": "H", "flagUrl": "/flags/esp.svg" },
+  { "name": "Cape Verde", "code": "CPV", "group": "H", "flagUrl": "/flags/cpv.svg" },
+  { "name": "Saudi Arabia", "code": "KSA", "group": "H", "flagUrl": "/flags/ksa.svg" },
+  { "name": "Uruguay", "code": "URU", "group": "H", "flagUrl": "/flags/uru.svg" },
+
+  { "name": "France", "code": "FRA", "group": "I", "flagUrl": "/flags/fra.svg" },
+  { "name": "Senegal", "code": "SEN", "group": "I", "flagUrl": "/flags/sen.svg" },
+  { "name": "Iraq", "code": "IRQ", "group": "I", "flagUrl": "/flags/irq.svg" },
+  { "name": "Norway", "code": "NOR", "group": "I", "flagUrl": "/flags/nor.svg" },
+
+  { "name": "Argentina", "code": "ARG", "group": "J", "flagUrl": "/flags/arg.svg" },
+  { "name": "Algeria", "code": "ALG", "group": "J", "flagUrl": "/flags/alg.svg" },
+  { "name": "Austria", "code": "AUT", "group": "J", "flagUrl": "/flags/aut.svg" },
+  { "name": "Jordan", "code": "JOR", "group": "J", "flagUrl": "/flags/jor.svg" },
+
+  { "name": "Portugal", "code": "POR", "group": "K", "flagUrl": "/flags/por.svg" },
+  { "name": "DR Congo", "code": "COD", "group": "K", "flagUrl": "/flags/cod.svg" },
+  { "name": "Uzbekistan", "code": "UZB", "group": "K", "flagUrl": "/flags/uzb.svg" },
+  { "name": "Colombia", "code": "COL", "group": "K", "flagUrl": "/flags/col.svg" },
+
+  { "name": "England", "code": "ENG", "group": "L", "flagUrl": "/flags/eng.svg" },
+  { "name": "Croatia", "code": "CRO", "group": "L", "flagUrl": "/flags/cro.svg" },
+  { "name": "Ghana", "code": "GHA", "group": "L", "flagUrl": "/flags/gha.svg" },
+  { "name": "Panama", "code": "PAN", "group": "L", "flagUrl": "/flags/pan.svg" }
+]

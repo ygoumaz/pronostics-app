@@ -1,0 +1,910 @@
+[
+  {
+    "matchNumber": 1,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "A",
+    "homeTeamCode": "MEX",
+    "awayTeamCode": "RSA",
+    "kickoffTime": "2026-06-11T19:00:00Z"
+  },
+  {
+    "matchNumber": 2,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "A",
+    "homeTeamCode": "KOR",
+    "awayTeamCode": "CZE",
+    "kickoffTime": "2026-06-12T02:00:00Z"
+  },
+  {
+    "matchNumber": 3,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "B",
+    "homeTeamCode": "CAN",
+    "awayTeamCode": "BIH",
+    "kickoffTime": "2026-06-12T19:00:00Z"
+  },
+  {
+    "matchNumber": 4,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "D",
+    "homeTeamCode": "USA",
+    "awayTeamCode": "PAR",
+    "kickoffTime": "2026-06-13T01:00:00Z"
+  },
+  {
+    "matchNumber": 5,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "B",
+    "homeTeamCode": "QAT",
+    "awayTeamCode": "SUI",
+    "kickoffTime": "2026-06-13T19:00:00Z"
+  },
+  {
+    "matchNumber": 6,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "C",
+    "homeTeamCode": "BRA",
+    "awayTeamCode": "MAR",
+    "kickoffTime": "2026-06-13T22:00:00Z"
+  },
+  {
+    "matchNumber": 7,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "C",
+    "homeTeamCode": "HAI",
+    "awayTeamCode": "SCO",
+    "kickoffTime": "2026-06-14T01:00:00Z"
+  },
+  {
+    "matchNumber": 8,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "D",
+    "homeTeamCode": "AUS",
+    "awayTeamCode": "TUR",
+    "kickoffTime": "2026-06-14T04:00:00Z"
+  },
+  {
+    "matchNumber": 9,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "E",
+    "homeTeamCode": "GER",
+    "awayTeamCode": "CUW",
+    "kickoffTime": "2026-06-14T17:00:00Z"
+  },
+  {
+    "matchNumber": 10,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "F",
+    "homeTeamCode": "NED",
+    "awayTeamCode": "JPN",
+    "kickoffTime": "2026-06-14T20:00:00Z"
+  },
+  {
+    "matchNumber": 11,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "E",
+    "homeTeamCode": "CIV",
+    "awayTeamCode": "ECU",
+    "kickoffTime": "2026-06-14T23:00:00Z"
+  },
+  {
+    "matchNumber": 12,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "F",
+    "homeTeamCode": "SWE",
+    "awayTeamCode": "TUN",
+    "kickoffTime": "2026-06-15T02:00:00Z"
+  },
+  {
+    "matchNumber": 13,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "H",
+    "homeTeamCode": "ESP",
+    "awayTeamCode": "CPV",
+    "kickoffTime": "2026-06-15T16:00:00Z"
+  },
+  {
+    "matchNumber": 14,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "G",
+    "homeTeamCode": "BEL",
+    "awayTeamCode": "EGY",
+    "kickoffTime": "2026-06-15T19:00:00Z"
+  },
+  {
+    "matchNumber": 15,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "H",
+    "homeTeamCode": "KSA",
+    "awayTeamCode": "URU",
+    "kickoffTime": "2026-06-15T22:00:00Z"
+  },
+  {
+    "matchNumber": 16,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "G",
+    "homeTeamCode": "IRN",
+    "awayTeamCode": "NZL",
+    "kickoffTime": "2026-06-16T01:00:00Z"
+  },
+  {
+    "matchNumber": 17,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "I",
+    "homeTeamCode": "FRA",
+    "awayTeamCode": "SEN",
+    "kickoffTime": "2026-06-16T19:00:00Z"
+  },
+  {
+    "matchNumber": 18,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "I",
+    "homeTeamCode": "IRQ",
+    "awayTeamCode": "NOR",
+    "kickoffTime": "2026-06-16T22:00:00Z"
+  },
+  {
+    "matchNumber": 19,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "J",
+    "homeTeamCode": "ARG",
+    "awayTeamCode": "ALG",
+    "kickoffTime": "2026-06-17T01:00:00Z"
+  },
+  {
+    "matchNumber": 20,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "J",
+    "homeTeamCode": "AUT",
+    "awayTeamCode": "JOR",
+    "kickoffTime": "2026-06-17T04:00:00Z"
+  },
+  {
+    "matchNumber": 21,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "K",
+    "homeTeamCode": "POR",
+    "awayTeamCode": "COD",
+    "kickoffTime": "2026-06-17T17:00:00Z"
+  },
+  {
+    "matchNumber": 22,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "L",
+    "homeTeamCode": "ENG",
+    "awayTeamCode": "CRO",
+    "kickoffTime": "2026-06-17T20:00:00Z"
+  },
+  {
+    "matchNumber": 23,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "L",
+    "homeTeamCode": "GHA",
+    "awayTeamCode": "PAN",
+    "kickoffTime": "2026-06-17T23:00:00Z"
+  },
+  {
+    "matchNumber": 24,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_1",
+    "groupCode": "K",
+    "homeTeamCode": "UZB",
+    "awayTeamCode": "COL",
+    "kickoffTime": "2026-06-18T02:00:00Z"
+  },
+
+  {
+    "matchNumber": 25,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "A",
+    "homeTeamCode": "CZE",
+    "awayTeamCode": "RSA",
+    "kickoffTime": "2026-06-18T16:00:00Z"
+  },
+  {
+    "matchNumber": 26,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "B",
+    "homeTeamCode": "SUI",
+    "awayTeamCode": "BIH",
+    "kickoffTime": "2026-06-18T19:00:00Z"
+  },
+  {
+    "matchNumber": 27,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "B",
+    "homeTeamCode": "CAN",
+    "awayTeamCode": "QAT",
+    "kickoffTime": "2026-06-18T22:00:00Z"
+  },
+  {
+    "matchNumber": 28,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "A",
+    "homeTeamCode": "MEX",
+    "awayTeamCode": "KOR",
+    "kickoffTime": "2026-06-19T01:00:00Z"
+  },
+  {
+    "matchNumber": 29,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "D",
+    "homeTeamCode": "USA",
+    "awayTeamCode": "AUS",
+    "kickoffTime": "2026-06-19T19:00:00Z"
+  },
+  {
+    "matchNumber": 30,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "C",
+    "homeTeamCode": "SCO",
+    "awayTeamCode": "MAR",
+    "kickoffTime": "2026-06-19T22:00:00Z"
+  },
+  {
+    "matchNumber": 31,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "C",
+    "homeTeamCode": "BRA",
+    "awayTeamCode": "HAI",
+    "kickoffTime": "2026-06-20T01:00:00Z"
+  },
+  {
+    "matchNumber": 32,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "D",
+    "homeTeamCode": "TUR",
+    "awayTeamCode": "PAR",
+    "kickoffTime": "2026-06-20T04:00:00Z"
+  },
+  {
+    "matchNumber": 33,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "F",
+    "homeTeamCode": "NED",
+    "awayTeamCode": "SWE",
+    "kickoffTime": "2026-06-20T17:00:00Z"
+  },
+  {
+    "matchNumber": 34,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "E",
+    "homeTeamCode": "GER",
+    "awayTeamCode": "CIV",
+    "kickoffTime": "2026-06-20T20:00:00Z"
+  },
+  {
+    "matchNumber": 35,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "E",
+    "homeTeamCode": "ECU",
+    "awayTeamCode": "CUW",
+    "kickoffTime": "2026-06-21T00:00:00Z"
+  },
+  {
+    "matchNumber": 36,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "F",
+    "homeTeamCode": "TUN",
+    "awayTeamCode": "JPN",
+    "kickoffTime": "2026-06-21T04:00:00Z"
+  },
+  {
+    "matchNumber": 37,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "H",
+    "homeTeamCode": "ESP",
+    "awayTeamCode": "KSA",
+    "kickoffTime": "2026-06-21T16:00:00Z"
+  },
+  {
+    "matchNumber": 38,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "G",
+    "homeTeamCode": "BEL",
+    "awayTeamCode": "IRN",
+    "kickoffTime": "2026-06-21T19:00:00Z"
+  },
+  {
+    "matchNumber": 39,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "H",
+    "homeTeamCode": "URU",
+    "awayTeamCode": "CPV",
+    "kickoffTime": "2026-06-21T22:00:00Z"
+  },
+  {
+    "matchNumber": 40,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "G",
+    "homeTeamCode": "NZL",
+    "awayTeamCode": "EGY",
+    "kickoffTime": "2026-06-22T01:00:00Z"
+  },
+  {
+    "matchNumber": 41,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "I",
+    "homeTeamCode": "FRA",
+    "awayTeamCode": "IRQ",
+    "kickoffTime": "2026-06-22T21:00:00Z"
+  },
+  {
+    "matchNumber": 42,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "J",
+    "homeTeamCode": "ARG",
+    "awayTeamCode": "AUT",
+    "kickoffTime": "2026-06-22T17:00:00Z"
+  },
+  {
+    "matchNumber": 43,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "I",
+    "homeTeamCode": "NOR",
+    "awayTeamCode": "SEN",
+    "kickoffTime": "2026-06-23T00:00:00Z"
+  },
+  {
+    "matchNumber": 44,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "J",
+    "homeTeamCode": "JOR",
+    "awayTeamCode": "ALG",
+    "kickoffTime": "2026-06-23T03:00:00Z"
+  },
+  {
+    "matchNumber": 45,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "K",
+    "homeTeamCode": "POR",
+    "awayTeamCode": "UZB",
+    "kickoffTime": "2026-06-23T17:00:00Z"
+  },
+  {
+    "matchNumber": 46,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "L",
+    "homeTeamCode": "ENG",
+    "awayTeamCode": "GHA",
+    "kickoffTime": "2026-06-23T20:00:00Z"
+  },
+  {
+    "matchNumber": 47,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "L",
+    "homeTeamCode": "PAN",
+    "awayTeamCode": "CRO",
+    "kickoffTime": "2026-06-23T23:00:00Z"
+  },
+  {
+    "matchNumber": 48,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_2",
+    "groupCode": "K",
+    "homeTeamCode": "COL",
+    "awayTeamCode": "COD",
+    "kickoffTime": "2026-06-24T02:00:00Z"
+  },
+
+  {
+    "matchNumber": 49,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "A",
+    "homeTeamCode": "CZE",
+    "awayTeamCode": "MEX",
+    "kickoffTime": "2026-06-25T01:00:00Z"
+  },
+  {
+    "matchNumber": 50,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "A",
+    "homeTeamCode": "RSA",
+    "awayTeamCode": "KOR",
+    "kickoffTime": "2026-06-25T01:00:00Z"
+  },
+  {
+    "matchNumber": 51,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "B",
+    "homeTeamCode": "SUI",
+    "awayTeamCode": "CAN",
+    "kickoffTime": "2026-06-24T19:00:00Z"
+  },
+  {
+    "matchNumber": 52,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "B",
+    "homeTeamCode": "BIH",
+    "awayTeamCode": "QAT",
+    "kickoffTime": "2026-06-24T19:00:00Z"
+  },
+  {
+    "matchNumber": 53,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "C",
+    "homeTeamCode": "SCO",
+    "awayTeamCode": "BRA",
+    "kickoffTime": "2026-06-24T22:00:00Z"
+  },
+  {
+    "matchNumber": 54,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "C",
+    "homeTeamCode": "MAR",
+    "awayTeamCode": "HAI",
+    "kickoffTime": "2026-06-24T22:00:00Z"
+  },
+  {
+    "matchNumber": 55,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "D",
+    "homeTeamCode": "TUR",
+    "awayTeamCode": "USA",
+    "kickoffTime": "2026-06-26T02:00:00Z"
+  },
+  {
+    "matchNumber": 56,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "D",
+    "homeTeamCode": "PAR",
+    "awayTeamCode": "AUS",
+    "kickoffTime": "2026-06-26T02:00:00Z"
+  },
+  {
+    "matchNumber": 57,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "E",
+    "homeTeamCode": "ECU",
+    "awayTeamCode": "GER",
+    "kickoffTime": "2026-06-25T20:00:00Z"
+  },
+  {
+    "matchNumber": 58,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "E",
+    "homeTeamCode": "CUW",
+    "awayTeamCode": "CIV",
+    "kickoffTime": "2026-06-25T20:00:00Z"
+  },
+  {
+    "matchNumber": 59,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "F",
+    "homeTeamCode": "JPN",
+    "awayTeamCode": "SWE",
+    "kickoffTime": "2026-06-25T23:00:00Z"
+  },
+  {
+    "matchNumber": 60,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "F",
+    "homeTeamCode": "TUN",
+    "awayTeamCode": "NED",
+    "kickoffTime": "2026-06-25T23:00:00Z"
+  },
+  {
+    "matchNumber": 61,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "G",
+    "homeTeamCode": "EGY",
+    "awayTeamCode": "IRN",
+    "kickoffTime": "2026-06-27T03:00:00Z"
+  },
+  {
+    "matchNumber": 62,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "G",
+    "homeTeamCode": "NZL",
+    "awayTeamCode": "BEL",
+    "kickoffTime": "2026-06-27T03:00:00Z"
+  },
+  {
+    "matchNumber": 63,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "H",
+    "homeTeamCode": "CPV",
+    "awayTeamCode": "KSA",
+    "kickoffTime": "2026-06-27T00:00:00Z"
+  },
+  {
+    "matchNumber": 64,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "H",
+    "homeTeamCode": "URU",
+    "awayTeamCode": "ESP",
+    "kickoffTime": "2026-06-27T00:00:00Z"
+  },
+  {
+    "matchNumber": 65,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "I",
+    "homeTeamCode": "NOR",
+    "awayTeamCode": "FRA",
+    "kickoffTime": "2026-06-26T19:00:00Z"
+  },
+  {
+    "matchNumber": 66,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "I",
+    "homeTeamCode": "SEN",
+    "awayTeamCode": "IRQ",
+    "kickoffTime": "2026-06-26T19:00:00Z"
+  },
+  {
+    "matchNumber": 67,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "J",
+    "homeTeamCode": "ALG",
+    "awayTeamCode": "AUT",
+    "kickoffTime": "2026-06-28T02:00:00Z"
+  },
+  {
+    "matchNumber": 68,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "J",
+    "homeTeamCode": "JOR",
+    "awayTeamCode": "ARG",
+    "kickoffTime": "2026-06-28T02:00:00Z"
+  },
+  {
+    "matchNumber": 69,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "K",
+    "homeTeamCode": "COL",
+    "awayTeamCode": "POR",
+    "kickoffTime": "2026-06-27T23:30:00Z"
+  },
+  {
+    "matchNumber": 70,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "K",
+    "homeTeamCode": "COD",
+    "awayTeamCode": "UZB",
+    "kickoffTime": "2026-06-27T23:30:00Z"
+  },
+  {
+    "matchNumber": 71,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "L",
+    "homeTeamCode": "PAN",
+    "awayTeamCode": "ENG",
+    "kickoffTime": "2026-06-27T21:00:00Z"
+  },
+  {
+    "matchNumber": 72,
+    "phase": "GROUP",
+    "stage": "GROUP_DAY_3",
+    "groupCode": "L",
+    "homeTeamCode": "CRO",
+    "awayTeamCode": "GHA",
+    "kickoffTime": "2026-06-27T21:00:00Z"
+  },
+
+  {
+    "matchNumber": 73,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "2e Groupe A",
+    "awayPlaceholder": "2e Groupe B",
+    "kickoffTime": "2026-06-28T19:00:00Z"
+  },
+  {
+    "matchNumber": 74,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe E",
+    "awayPlaceholder": "3e Groupe A/B/C/D/F",
+    "kickoffTime": "2026-06-29T20:30:00Z"
+  },
+  {
+    "matchNumber": 75,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe F",
+    "awayPlaceholder": "2e Groupe C",
+    "kickoffTime": "2026-06-30T01:00:00Z"
+  },
+  {
+    "matchNumber": 76,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe C",
+    "awayPlaceholder": "2e Groupe F",
+    "kickoffTime": "2026-06-29T17:00:00Z"
+  },
+  {
+    "matchNumber": 77,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe I",
+    "awayPlaceholder": "3e Groupe C/D/F/G/H",
+    "kickoffTime": "2026-06-30T21:00:00Z"
+  },
+  {
+    "matchNumber": 78,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "2e Groupe E",
+    "awayPlaceholder": "2e Groupe I",
+    "kickoffTime": "2026-06-30T17:00:00Z"
+  },
+  {
+    "matchNumber": 79,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe A",
+    "awayPlaceholder": "3e Groupe C/E/F/H/I",
+    "kickoffTime": "2026-07-01T01:00:00Z"
+  },
+  {
+    "matchNumber": 80,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe L",
+    "awayPlaceholder": "3e Groupe E/H/I/J/K",
+    "kickoffTime": "2026-07-01T16:00:00Z"
+  },
+  {
+    "matchNumber": 81,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe D",
+    "awayPlaceholder": "3e Groupe B/E/F/I/J",
+    "kickoffTime": "2026-07-02T00:00:00Z"
+  },
+  {
+    "matchNumber": 82,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe G",
+    "awayPlaceholder": "3e Groupe A/E/H/I/J",
+    "kickoffTime": "2026-07-01T20:00:00Z"
+  },
+  {
+    "matchNumber": 83,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "2e Groupe K",
+    "awayPlaceholder": "2e Groupe L",
+    "kickoffTime": "2026-07-02T23:00:00Z"
+  },
+  {
+    "matchNumber": 84,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe H",
+    "awayPlaceholder": "2e Groupe J",
+    "kickoffTime": "2026-07-02T19:00:00Z"
+  },
+  {
+    "matchNumber": 85,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe B",
+    "awayPlaceholder": "3e Groupe E/F/G/I/J",
+    "kickoffTime": "2026-07-03T03:00:00Z"
+  },
+  {
+    "matchNumber": 86,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe J",
+    "awayPlaceholder": "2e Groupe H",
+    "kickoffTime": "2026-07-03T22:00:00Z"
+  },
+  {
+    "matchNumber": 87,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "1er Groupe K",
+    "awayPlaceholder": "3e Groupe D/E/I/J/L",
+    "kickoffTime": "2026-07-04T01:30:00Z"
+  },
+  {
+    "matchNumber": 88,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_32",
+    "homePlaceholder": "2e Groupe D",
+    "awayPlaceholder": "2e Groupe G",
+    "kickoffTime": "2026-07-03T18:00:00Z"
+  },
+
+  {
+    "matchNumber": 89,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M74",
+    "awayPlaceholder": "Vainqueur M77",
+    "kickoffTime": "2026-07-04T21:00:00Z"
+  },
+  {
+    "matchNumber": 90,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M73",
+    "awayPlaceholder": "Vainqueur M75",
+    "kickoffTime": "2026-07-04T17:00:00Z"
+  },
+  {
+    "matchNumber": 91,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M76",
+    "awayPlaceholder": "Vainqueur M78",
+    "kickoffTime": "2026-07-05T20:00:00Z"
+  },
+  {
+    "matchNumber": 92,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M79",
+    "awayPlaceholder": "Vainqueur M80",
+    "kickoffTime": "2026-07-06T00:00:00Z"
+  },
+  {
+    "matchNumber": 93,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M83",
+    "awayPlaceholder": "Vainqueur M84",
+    "kickoffTime": "2026-07-06T19:00:00Z"
+  },
+  {
+    "matchNumber": 94,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M81",
+    "awayPlaceholder": "Vainqueur M82",
+    "kickoffTime": "2026-07-07T00:00:00Z"
+  },
+  {
+    "matchNumber": 95,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M86",
+    "awayPlaceholder": "Vainqueur M88",
+    "kickoffTime": "2026-07-07T16:00:00Z"
+  },
+  {
+    "matchNumber": 96,
+    "phase": "KNOCKOUT",
+    "stage": "ROUND_OF_16",
+    "homePlaceholder": "Vainqueur M85",
+    "awayPlaceholder": "Vainqueur M87",
+    "kickoffTime": "2026-07-07T20:00:00Z"
+  },
+  {
+    "matchNumber": 97,
+    "phase": "KNOCKOUT",
+    "stage": "QUARTER_FINAL",
+    "homePlaceholder": "Vainqueur M89",
+    "awayPlaceholder": "Vainqueur M90",
+    "kickoffTime": "2026-07-09T20:00:00Z"
+  },
+  {
+    "matchNumber": 98,
+    "phase": "KNOCKOUT",
+    "stage": "QUARTER_FINAL",
+    "homePlaceholder": "Vainqueur M93",
+    "awayPlaceholder": "Vainqueur M94",
+    "kickoffTime": "2026-07-10T19:00:00Z"
+  },
+  {
+    "matchNumber": 99,
+    "phase": "KNOCKOUT",
+    "stage": "QUARTER_FINAL",
+    "homePlaceholder": "Vainqueur M91",
+    "awayPlaceholder": "Vainqueur M92",
+    "kickoffTime": "2026-07-11T21:00:00Z"
+  },
+  {
+    "matchNumber": 100,
+    "phase": "KNOCKOUT",
+    "stage": "QUARTER_FINAL",
+    "homePlaceholder": "Vainqueur M95",
+    "awayPlaceholder": "Vainqueur M96",
+    "kickoffTime": "2026-07-12T01:00:00Z"
+  },
+  {
+    "matchNumber": 101,
+    "phase": "KNOCKOUT",
+    "stage": "SEMI_FINAL",
+    "homePlaceholder": "Vainqueur M97",
+    "awayPlaceholder": "Vainqueur M98",
+    "kickoffTime": "2026-07-14T19:00:00Z"
+  },
+  {
+    "matchNumber": 102,
+    "phase": "KNOCKOUT",
+    "stage": "SEMI_FINAL",
+    "homePlaceholder": "Vainqueur M99",
+    "awayPlaceholder": "Vainqueur M100",
+    "kickoffTime": "2026-07-15T19:00:00Z"
+  },
+  {
+    "matchNumber": 103,
+    "phase": "KNOCKOUT",
+    "stage": "THIRD_PLACE",
+    "homePlaceholder": "Perdant M101",
+    "awayPlaceholder": "Perdant M102",
+    "kickoffTime": "2026-07-18T21:00:00Z"
+  },
+  {
+    "matchNumber": 104,
+    "phase": "KNOCKOUT",
+    "stage": "FINAL",
+    "homePlaceholder": "Vainqueur M101",
+    "awayPlaceholder": "Vainqueur M102",
+    "kickoffTime": "2026-07-19T19:00:00Z"
+  }
+]
