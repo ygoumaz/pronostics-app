@@ -62,7 +62,8 @@ export interface RewardPrediction {
   id: string;
   participantId: string;
   rewardType: RewardType;
-  playerId: string;
+  playerId?: string | null;   // null pour FAIR_PLAY (récompense d'équipe)
+  teamCode?: string | null;   // utilisé pour FAIR_PLAY uniquement
   points?: number;
   createdAt: Date;
   updatedAt: Date;

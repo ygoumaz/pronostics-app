@@ -34,6 +34,7 @@ import {
 import { ResultForm } from '@/components/admin/result-form';
 import { Button } from '@/components/ui/button';
 import { PlayerSelector, type PlayerOption } from '@/components/player-selector';
+import { TeamSelector, type TeamOption } from '@/components/team-selector';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -53,7 +54,7 @@ const REWARD_LABELS: Record<string, string> = {
   GOLDEN_BOOT: "Soulier d'Or (meilleur buteur)",
   GOLDEN_BALL: "Ballon d'Or (meilleur joueur)",
   GOLDEN_GLOVE: "Gant d'Or (meilleur gardien)",
-  BEST_YOUNG: 'Meilleur Jeune Joueur',
+  BEST_YOUNG: 'Meilleur Jeune Joueur (21 ans ou moins au 1er janvier 2026)',
   FAIR_PLAY: 'Prix du Fair-Play',
 };
 
@@ -68,13 +69,14 @@ const REWARD_EMOJIS: Record<string, string> = {
 
 interface RewardResult {
   rewardType: string;
-  playerId: string;
+  playerId: string | null;
+  teamCode: string | null;
 }
 
 interface RecompensesState {
   rewardTypes: string[];
   locked: boolean;
-  predictions: { rewardType: string; playerId: string; points: number | null }[];
+  predictions: { rewardType: string; playerId: string | null; teamCode: string | null; points: number | null }[];
   results: RewardResult[];
 }
 
@@ -177,28 +179,53 @@ export default function AdminResultatsPage() {
       const data = (await response.json()) as RecompensesState;
       setRecompenses(data);
 
+      // Résoudre les libellés des joueurs pour les récompenses joueur.
       const playerIds = Array.from(
-        new Set(data.results.map((r) => r.playerId))
+        new Set(data.results.filter((r) => r.playerId).map((r) => r.playerId!))
       );
       const labelById = await resolvePlayerLabels(playerIds);
+
+      // Résoudre les libellés des équipes pour le Fair-Play.
+      const teamLabelByCode: Record<string, string> = {};
+      const fairPlayResult = data.results.find((r) => r.rewardType === 'FAIR_PLAY');
+      if (fairPlayResult?.teamCode) {
+        try {
+          const teamsRes = await fetch('/api/teams');
+          if (teamsRes.ok) {
+            const teamsData = (await teamsRes.json()) as { teams: TeamOption[] };
+            for (const t of teamsData.teams ?? []) {
+              teamLabelByCode[t.code] = t.name;
+            }
+          }
+        } catch { /* silent */ }
+      }
 
       const initialSelections: Record<
         string,
         { id: string; label: string } | null
       > = {};
       data.results.forEach((r) => {
-        initialSelections[r.rewardType] = {
-          id: r.playerId,
-          label: labelById[r.playerId] ?? r.playerId,
-        };
+        if (r.rewardType === 'FAIR_PLAY' && r.teamCode) {
+          initialSelections[r.rewardType] = {
+            id: r.teamCode,
+            label: teamLabelByCode[r.teamCode] ?? r.teamCode,
+          };
+        } else if (r.playerId) {
+          initialSelections[r.rewardType] = {
+            id: r.playerId,
+            label: labelById[r.playerId] ?? r.playerId,
+          };
+        }
       });
       setRewardSelections(initialSelections);
       setWinnerLabels(
         Object.fromEntries(
-          data.results.map((r) => [
-            r.rewardType,
-            labelById[r.playerId] ?? r.playerId,
-          ])
+          data.results.map((r) => {
+            if (r.rewardType === 'FAIR_PLAY' && r.teamCode) {
+              return [r.rewardType, teamLabelByCode[r.teamCode] ?? r.teamCode];
+            }
+            return [r.rewardType, r.playerId ? (labelById[r.playerId] ?? r.playerId) : ''];
+          })
         )
       );
     } catch {
@@ -278,6 +305,7 @@ export default function AdminResultatsPage() {
   );
 
   // ── Enregistrement d'un vainqueur de récompense ───────────────────────────
+  // ── Enregistrement d'un vainqueur de récompense joueur ───────────────────
   async function handleRewardSelect(rewardType: string, player: PlayerOption) {
     setRewardSelections((prev) => ({
       ...prev,
@@ -328,7 +356,73 @@ export default function AdminResultatsPage() {
         const others = prev.results.filter((r) => r.rewardType !== rewardType);
         return {
           ...prev,
-          results: [...others, { rewardType, playerId: player.id }],
+          results: [...others, { rewardType, playerId: player.id, teamCode: null }],
+        };
+      });
+    } catch {
+      setRewardSaveStates((prev) => ({
+        ...prev,
+        [rewardType]: {
+          status: 'error',
+          message: 'Une erreur technique est survenue. Veuillez réessayer.',
+        },
+      }));
+    }
+  }
+
+  // ── Enregistrement du vainqueur Fair-Play (équipe) ────────────────────────
+  async function handleFairPlayTeamSelect(team: TeamOption) {
+    const rewardType = 'FAIR_PLAY';
+    setRewardSelections((prev) => ({
+      ...prev,
+      [rewardType]: { id: team.code, label: team.name },
+    }));
+    setRewardSaveStates((prev) => ({
+      ...prev,
+      [rewardType]: { status: 'saving' },
+    }));
+
+    try {
+      const response = await fetch(`/api/recompenses/${rewardType}/winner`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ teamCode: team.code }),
+      });
+      const data = (await response.json().catch(() => null)) as
+        | { message?: string; error?: string; updatedPredictions?: number }
+        | null;
+
+      if (!response.ok) {
+        setRewardSaveStates((prev) => ({
+          ...prev,
+          [rewardType]: {
+            status: 'error',
+            message:
+              data?.error ??
+              (response.status === 403
+                ? "Cette fonctionnalité est réservée à l'Administrateur."
+                : 'Une erreur technique est survenue. Veuillez réessayer.'),
+          },
+        }));
+        return;
+      }
+
+      const updated = data?.updatedPredictions ?? 0;
+      const confirmation = data?.message ?? 'Le vainqueur a été enregistré.';
+      setRewardSaveStates((prev) => ({
+        ...prev,
+        [rewardType]: {
+          status: 'success',
+          message: `${confirmation} (${updated} pronostic${updated > 1 ? 's' : ''} recalculé${updated > 1 ? 's' : ''}).`,
+        },
+      }));
+      setWinnerLabels((prev) => ({ ...prev, [rewardType]: team.name }));
+      setRecompenses((prev) => {
+        if (!prev) return prev;
+        const others = prev.results.filter((r) => r.rewardType !== rewardType);
+        return {
+          ...prev,
+          results: [...others, { rewardType, playerId: null, teamCode: team.code }],
         };
       });
     } catch {
@@ -530,11 +624,12 @@ export default function AdminResultatsPage() {
                   Général
                 </h2>
                 <p className="text-sm text-muted-foreground">
-                  Désignez le vainqueur officiel de chaque récompense parmi la
-                  liste des joueurs. À l&apos;enregistrement, les points bonus de tous
-                  les participants sont recalculés automatiquement (5 points par
-                  bon pronostic). Vous pouvez corriger un vainqueur déjà désigné
-                  à tout moment.
+                  Désignez le vainqueur officiel de chaque récompense. Pour les
+                  récompenses individuelles, sélectionnez un joueur ; pour le
+                  Prix du Fair-Play, sélectionnez une équipe. À
+                  l&apos;enregistrement, les points bonus de tous les participants
+                  sont recalculés automatiquement (5 points par bon pronostic).
+                  Vous pouvez corriger un vainqueur déjà désigné à tout moment.
                 </p>
               </header>
 
@@ -595,15 +690,27 @@ export default function AdminResultatsPage() {
                         </p>
 
                         <div className="mt-2">
-                          <PlayerSelector
-                            inputId={inputId}
-                            value={selection?.id ?? null}
-                            valueLabel={selection?.label ?? null}
-                            onSelect={(player) =>
-                              void handleRewardSelect(rewardType, player)
-                            }
-                            describedById={describedById}
-                          />
+                          {rewardType === 'FAIR_PLAY' ? (
+                            <TeamSelector
+                              inputId={inputId}
+                              value={selection?.id ?? null}
+                              valueLabel={selection?.label ?? null}
+                              onSelect={(team) =>
+                                void handleFairPlayTeamSelect(team)
+                              }
+                              describedById={describedById}
+                            />
+                          ) : (
+                            <PlayerSelector
+                              inputId={inputId}
+                              value={selection?.id ?? null}
+                              valueLabel={selection?.label ?? null}
+                              onSelect={(player) =>
+                                void handleRewardSelect(rewardType, player)
+                              }
+                              describedById={describedById}
+                            />
+                          )}
                         </div>
 
                         {saveState?.message && (

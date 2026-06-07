@@ -137,7 +137,8 @@ model RewardPrediction {
   id            String     @id @default(cuid())
   participantId String
   rewardType    RewardType
-  playerId      String
+  playerId      String?    // null pour FAIR_PLAY (récompense d'équipe)
+  teamCode      String?    // utilisé pour FAIR_PLAY uniquement
   points        Int?       // null = pas encore évalué, 0 ou 5
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
@@ -150,7 +151,8 @@ model RewardPrediction {
 model RewardResult {
   id         String     @id @default(cuid())
   rewardType RewardType @unique
-  playerId   String
+  playerId   String?    // null pour FAIR_PLAY (récompense d'équipe)
+  teamCode   String?    // utilisé pour FAIR_PLAY uniquement
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
 }

@@ -45,14 +45,16 @@ interface AdminPronostic {
 /** Pronostic récompense d'un participant. */
 interface AdminRewardPrediction {
   rewardType: string;
-  playerId: string;
+  playerId: string | null;
+  teamCode: string | null;
   points: number | null;
 }
 
 /** Vainqueur officiel d'une récompense. */
 interface AdminRewardResult {
   rewardType: string;
-  playerId: string;
+  playerId: string | null;
+  teamCode: string | null;
 }
 
 /** En-tête participant renvoyé par la route de détail (Exigence 14.4). */
@@ -131,12 +133,28 @@ async function resolvePlayerLabels(
   }
 }
 
+/** Résout les noms des équipes depuis l'API /api/teams. */
+async function resolveTeamLabels(): Promise<Record<string, string>> {
+  try {
+    const response = await fetch('/api/teams');
+    if (!response.ok) return {};
+    const data = (await response.json()) as { teams: { code: string; name: string }[] };
+    const labels: Record<string, string> = {};
+    for (const team of data.teams ?? []) {
+      labels[team.code] = team.name;
+    }
+    return labels;
+  } catch {
+    return {};
+  }
+}
+
 /** Libellés français des 5 récompenses individuelles. */
 const REWARD_LABELS: Record<string, string> = {
   GOLDEN_BOOT: "Soulier d'Or (meilleur buteur)",
   GOLDEN_BALL: "Ballon d'Or (meilleur joueur)",
   GOLDEN_GLOVE: "Gant d'Or (meilleur gardien)",
-  BEST_YOUNG: 'Meilleur Jeune Joueur',
+  BEST_YOUNG: 'Meilleur Jeune Joueur (21 ans ou moins au 1er janvier 2026)',
   FAIR_PLAY: 'Prix du Fair-Play',
 };
 
@@ -194,6 +212,7 @@ export default function AdminParticipantsPage() {
   const [detailState, setDetailState] = useState<DetailState>({ status: 'idle' });
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [playerLabels, setPlayerLabels] = useState<Record<string, string>>({});
+  const [teamLabels, setTeamLabels] = useState<Record<string, string>>({});
 
   // Chargement de la liste des participants (administrateur uniquement).
   const loadList = useCallback(async () => {
@@ -234,15 +253,24 @@ export default function AdminParticipantsPage() {
       }
       const data = (await response.json()) as DetailResponse;
 
-      // Résolution des noms de joueurs pour les récompenses.
+      // Résolution des noms de joueurs pour les récompenses joueur.
       const allPlayerIds = Array.from(
         new Set([
-          ...( data.rewardPredictions ?? []).map((p) => p.playerId),
-          ...(data.rewardResults ?? []).map((r) => r.playerId),
+          ...(data.rewardPredictions ?? []).filter((p) => p.playerId).map((p) => p.playerId!),
+          ...(data.rewardResults ?? []).filter((r) => r.playerId).map((r) => r.playerId!),
         ])
       );
       const labels = await resolvePlayerLabels(allPlayerIds);
       setPlayerLabels(labels);
+
+      // Résolution des noms d'équipes pour le Fair-Play.
+      const needsTeams =
+        (data.rewardPredictions ?? []).some((p) => p.teamCode) ||
+        (data.rewardResults ?? []).some((r) => r.teamCode);
+      if (needsTeams) {
+        const tLabels = await resolveTeamLabels();
+        setTeamLabels(tLabels);
+      }
 
       setDetailState({
         status: 'ready',
@@ -524,7 +552,11 @@ export default function AdminParticipantsPage() {
                               <td className="px-4 py-3 text-foreground">
                                 {prediction ? (
                                   <span className="font-medium">
-                                    {playerLabels[prediction.playerId] ?? prediction.playerId}
+                                    {prediction.teamCode
+                                      ? (teamLabels[prediction.teamCode] ?? prediction.teamCode)
+                                      : prediction.playerId
+                                        ? (playerLabels[prediction.playerId] ?? prediction.playerId)
+                                        : '—'}
                                   </span>
                                 ) : (
                                   <span className="text-muted-foreground">
@@ -535,7 +567,11 @@ export default function AdminParticipantsPage() {
                               <td className="px-4 py-3 text-foreground">
                                 {result ? (
                                   <span className="font-medium">
-                                    {playerLabels[result.playerId] ?? result.playerId}
+                                    {result.teamCode
+                                      ? (teamLabels[result.teamCode] ?? result.teamCode)
+                                      : result.playerId
+                                        ? (playerLabels[result.playerId] ?? result.playerId)
+                                        : '—'}
                                   </span>
                                 ) : (
                                   <span className="text-muted-foreground">

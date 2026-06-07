@@ -40,10 +40,10 @@ export async function GET() {
     const [predictions, results, registrationOpen] = await Promise.all([
       prisma.rewardPrediction.findMany({
         where: { participantId },
-        select: { rewardType: true, playerId: true, points: true },
+        select: { rewardType: true, playerId: true, teamCode: true, points: true },
       }),
       prisma.rewardResult.findMany({
-        select: { rewardType: true, playerId: true },
+        select: { rewardType: true, playerId: true, teamCode: true },
       }),
       isRegistrationOpen(),
     ]);
