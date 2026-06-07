@@ -414,7 +414,7 @@ export default function AdminResultatsPage() {
 
       {presentStages.length === 0 ? (
         <p className="rounded-md border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-          Aucun match n'est disponible pour le moment.
+          Aucun match n&apos;est disponible pour le moment.
         </p>
       ) : (
         <>
@@ -475,7 +475,7 @@ export default function AdminResultatsPage() {
                 <p className="font-medium text-foreground">Règles de saisie</p>
                 <ul className="mt-2 list-disc space-y-1 pl-5">
                   <li>
-                    La saisie n'est possible qu'une fois le coup d'envoi du match
+                    La saisie n&apos;est possible qu&apos;une fois le coup d&apos;envoi du match
                     atteint.
                   </li>
                   <li>Chaque score est un nombre entier compris entre 0 et 99.</li>
@@ -484,7 +484,7 @@ export default function AdminResultatsPage() {
                     vous devez désigner le vainqueur aux tirs au but.
                   </li>
                   <li>
-                    Vous pouvez corriger un résultat déjà saisi : les points des
+                    Vous pouvez corriger un résultat déjà saisi&nbsp;: les points des
                     participants seront recalculés.
                   </li>
                 </ul>
@@ -531,7 +531,7 @@ export default function AdminResultatsPage() {
                 </h2>
                 <p className="text-sm text-muted-foreground">
                   Désignez le vainqueur officiel de chaque récompense parmi la
-                  liste des joueurs. À l'enregistrement, les points bonus de tous
+                  liste des joueurs. À l&apos;enregistrement, les points bonus de tous
                   les participants sont recalculés automatiquement (5 points par
                   bon pronostic). Vous pouvez corriger un vainqueur déjà désigné
                   à tout moment.

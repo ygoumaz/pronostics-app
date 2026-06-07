@@ -1,5 +1,5 @@
 # fly.toml — Pronostics Coupe du Monde 2026
-app = "tiger-reservation-bot"
+app = "pronostics-app"
 primary_region = "cdg"  # Paris — change if you prefer another region
 
 [build]
@@ -28,6 +28,6 @@ primary_region = "cdg"  # Paris — change if you prefer another region
   cpus = 1
 
 [[mounts]]
-  source = "tiger_data"
+  source = "pronostics_data"
   destination = "/data"
   initial_size = "1gb"

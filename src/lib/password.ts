@@ -7,7 +7,7 @@
 // On centralise ici l'usage de bcrypt (coût 12) afin que la route d'inscription
 // et les tests partagent exactement la même logique de hachage/vérification.
 
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 /** Facteur de coût bcrypt utilisé pour le hachage des mots de passe. */
 export const BCRYPT_COST = 12;

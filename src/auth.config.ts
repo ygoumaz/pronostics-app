@@ -42,6 +42,10 @@ function isPublicPath(pathname: string): boolean {
 export const authConfig = {
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
 
+  // Requis en production derrière un proxy (Fly.io, Vercel, etc.)
+  // Fait confiance au header Host transmis par le reverse proxy.
+  trustHost: true,
+
   pages: {
     signIn: '/connexion',
   },

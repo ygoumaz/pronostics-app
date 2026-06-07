@@ -31,19 +31,22 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-# Copy built assets
+# Copy built assets (Next.js standalone)
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Copy Prisma schema and migrations (needed for migrate deploy at startup)
 COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
-# Copy seed script and its dependencies
-COPY --from=builder /app/node_modules/tsx ./node_modules/tsx
-COPY --from=builder /app/node_modules/bcrypt ./node_modules/bcrypt
+# Copy seed data files
+COPY --from=builder /app/data ./data
+
+# Copy full node_modules for startup tools (prisma CLI, tsx, seed deps)
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+
+# package.json needed by Node module resolution
+COPY --from=builder /app/package.json ./package.json
 
 # Startup script
 COPY docker-entrypoint.sh ./

@@ -482,7 +482,7 @@ export default function PronosticsPage() {
         <h1 className="text-2xl font-semibold text-foreground">Pronostics</h1>
         <p className="text-sm text-muted-foreground">
           Saisissez vos pronostics avant la clôture de chaque étape. Les
-          pronostics sont privés jusqu'au coup d'envoi.
+          pronostics sont privés jusqu&apos;au coup d&apos;envoi.
         </p>
       </header>
 
@@ -496,7 +496,7 @@ export default function PronosticsPage() {
 
       {presentStages.length === 0 && recompenses === null ? (
         <p className="rounded-md border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-          Aucun match n'est disponible pour le moment.
+          Aucun match n&apos;est disponible pour le moment.
         </p>
       ) : (
         <>
@@ -600,7 +600,7 @@ export default function PronosticsPage() {
               <p className="text-sm text-muted-foreground">
                 Pronostiquez les vainqueurs des 5 récompenses individuelles pour
                 gagner des points bonus (5 points par bon pronostic). Les
-                pronostics sont clôturés au coup d'envoi de la Journée 1.
+                pronostics sont clôturés au coup d&apos;envoi de la Journée 1.
               </p>
 
               {recompenses === null ? (
