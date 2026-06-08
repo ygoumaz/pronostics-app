@@ -16,6 +16,9 @@
 
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
+import { ArrowRight } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
@@ -78,12 +81,12 @@ export default async function CalendrierPage() {
             affichés dans votre fuseau horaire local.
           </p>
         </div>
-        <Link
-          href="/pronostics"
-          className="mt-1 shrink-0 text-sm text-primary hover:underline"
-        >
-          Mes pronostics →
-        </Link>
+        <Button variant="outline" size="sm" asChild>
+          <Link href="/pronostics" className="gap-1.5">
+            Mes pronostics
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </Button>
       </header>
 
       {matches.length === 0 ? (
