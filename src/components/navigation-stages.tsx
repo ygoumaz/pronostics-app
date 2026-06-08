@@ -30,18 +30,17 @@ export const STAGE_LABELS: Record<Stage, string> = {
   GROUP_DAY_1: 'Journée 1',
   GROUP_DAY_2: 'Journée 2',
   GROUP_DAY_3: 'Journée 3',
-  ROUND_OF_32: 'Huitièmes',
-  ROUND_OF_16: 'Quarts',
-  QUARTER_FINAL: 'Quarts de finale',
+  ROUND_OF_32: '16èmes',
+  ROUND_OF_16: '8èmes',
+  QUARTER_FINAL: 'Quarts',
   SEMI_FINAL: 'Demi-finales',
   THIRD_PLACE: '3e place',
   FINAL: 'Finale',
 };
 
-// NOTE — nommage des tours : l'enum du domaine nomme les tours à 32 puis 16
-// équipes `ROUND_OF_32` / `ROUND_OF_16`. Pour rester fidèle au vocabulaire
-// footballistique français, `ROUND_OF_32` = « Huitièmes » (16 matchs) et
-// `ROUND_OF_16` = « Quarts ». Les libellés sont centralisés ici pour cohérence.
+// NOTE — nommage des tours : `ROUND_OF_32` = 32 équipes → 16 matchs → « 16èmes de finale »,
+// `ROUND_OF_16` = 16 équipes → 8 matchs → « 8èmes de finale »,
+// `QUARTER_FINAL` = 8 équipes → 4 matchs → « Quarts de finale ».
 
 interface NavigationStagesProps {
   /** Étapes réellement présentes dans les données, déjà filtrées par l'appelant. */
