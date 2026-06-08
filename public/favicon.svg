@@ -1,79 +1,75 @@
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Football prediction favicon">
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Football favicon">
+  <!-- Background square -->
   <rect x="4" y="4" width="56" height="56" rx="14" fill="#061A2D"/>
 
-  <!-- Prediction arrow behind the ball -->
-  <path
-    d="M16 41L28 29L37 35L50 19"
-    fill="none"
-    stroke="#38FF9C"
-    stroke-width="6"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
-  <path
-    d="M42 19H50V27"
-    fill="none"
-    stroke="#38FF9C"
-    stroke-width="6"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-  />
+  <!-- Ball main element -->
+  <g transform="translate(32 32)">
+    <!-- Soft shadow -->
+    <ellipse cx="0" cy="18" rx="15" ry="4" fill="#000000" opacity="0.22"/>
 
-  <!-- Ball smaller and bottom-left -->
-  <g transform="translate(25 43)">
     <!-- Outer ball -->
-    <circle r="12" fill="#F8FAFC"/>
-    <circle r="12" fill="none" stroke="#D8E2EA" stroke-width="1.2"/>
+    <circle r="19" fill="#F8FAFC"/>
+    <circle r="19" fill="none" stroke="#D8E2EA" stroke-width="1.5"/>
 
-    <!-- Red panel -->
+    <!-- Red left panel, moved more to the left -->
     <path
-      d="M-11 -3C-9 -10 -2 -13 4 -11C0 -7 -2 -2 -1 3C-6 2 -10 0 -11 -3Z"
+      d="M-18 -5C-15 -15 -8 -19 1 -18C-5 -12 -8 -5 -7 4C-12 2 -16 -1 -18 -5Z"
       fill="#D43C3C"
     />
 
-    <!-- Blue panel -->
+    <!-- Blue right panel, moved more to the right -->
     <path
-      d="M3 -11C9 -9 12 -4 12 1C8 -1 5 0 1 4C1 -2 2 -7 3 -11Z"
+      d="M8 -18C16 -14 19 -7 18 1C13 -2 9 -1 5 5C4 -4 5 -11 8 -18Z"
       fill="#1F8EEA"
     />
 
     <!-- Green lower panel -->
     <path
-      d="M-6 7C-1 5 5 5 10 7C7 11 0 13 -6 10C-8 9 -8 8 -6 7Z"
+      d="M-9 12C-2 9 7 9 15 12C10 18 0 21 -10 16C-13 15 -12 13 -9 12Z"
       fill="#35A853"
     />
 
-    <!-- Navy curved separators -->
+    <!-- Navy curved separators, adjusted to keep clearer spacing -->
     <path
-      d="M-8 -9C-3 -6 -1 -2 -1 3"
+      d="M-14 -14C-8 -10 -6 -4 -7 4"
       fill="none"
       stroke="#14233B"
-      stroke-width="1.4"
+      stroke-width="2"
       stroke-linecap="round"
     />
     <path
-      d="M3 -10C2 -5 1 -1 -2 4"
+      d="M8 -17C7 -9 5 -2 1 6"
       fill="none"
       stroke="#14233B"
-      stroke-width="1.4"
+      stroke-width="2"
       stroke-linecap="round"
     />
     <path
-      d="M-7 8C-1 5 5 5 10 7"
+      d="M-10 13C-2 9 7 9 15 12"
       fill="none"
       stroke="#14233B"
-      stroke-width="1.2"
+      stroke-width="1.8"
       stroke-linecap="round"
     />
 
-    <!-- Central badge -->
-    <rect x="-3.6" y="-5.4" width="7.2" height="10.2" rx="1.6" fill="#EAF7FF"/>
-    <rect x="-2.5" y="-4.2" width="5" height="7.5" rx="1.1" fill="#1F8EEA"/>
+    <!-- Central badge area, simplified and original -->
+    <rect x="-5.8" y="-8.2" width="11.6" height="15.8" rx="2.6" fill="#EAF7FF"/>
+    <rect x="-4" y="-6.2" width="8" height="11.8" rx="1.7" fill="#1F8EEA"/>
 
-    <!-- Simplified trophy-like mark -->
+    <!-- Simple trophy-like icon, not official logo -->
     <path
-      d="M0 -2.6C1.2 -2.6 2 -1.8 2 -0.8C2 0.3 1.3 1 0.6 1.2V2.3H1.7V3H-1.7V2.3H-0.6V1.2C-1.3 1 -2 0.3 -2 -0.8C-2 -1.8 -1.2 -2.6 0 -2.6Z"
+      d="M0 -4.2C1.9 -4.2 3.2 -3 3.2 -1.3C3.2 0.4 2.1 1.6 0.9 1.9V3.7H2.6V4.8H-2.6V3.7H-0.9V1.9C-2.1 1.6 -3.2 0.4 -3.2 -1.3C-3.2 -3 -1.9 -4.2 0 -4.2Z"
       fill="#FFFFFF"
+    />
+
+    <!-- Small highlight -->
+    <path
+      d="M-10 -13C-6 -16 -1 -17 4 -16"
+      fill="none"
+      stroke="#FFFFFF"
+      stroke-width="2"
+      stroke-linecap="round"
+      opacity="0.45"
     />
   </g>
 </svg>
