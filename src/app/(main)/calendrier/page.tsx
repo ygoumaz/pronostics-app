@@ -14,6 +14,7 @@
 // L'accès est protégé par le middleware et le layout (main) ; une vérification
 // défensive supplémentaire est appliquée ici.
 
+import Link from 'next/link';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
@@ -69,12 +70,20 @@ export default async function CalendrierPage() {
 
   return (
     <div className="space-y-6">
-      <header>
-        <h1 className="text-2xl font-semibold text-foreground">Calendrier</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Consultez les matchs par journée et par tour. Les horaires sont
-          affichés dans votre fuseau horaire local.
-        </p>
+      <header className="flex flex-wrap items-start justify-between gap-2">
+        <div>
+          <h1 className="text-2xl font-semibold text-foreground">Calendrier</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Consultez les matchs par journée et par tour. Les horaires sont
+            affichés dans votre fuseau horaire local.
+          </p>
+        </div>
+        <Link
+          href="/pronostics"
+          className="mt-1 shrink-0 text-sm text-primary hover:underline"
+        >
+          Mes pronostics →
+        </Link>
       </header>
 
       {matches.length === 0 ? (
