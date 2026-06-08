@@ -1,0 +1,79 @@
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Football prediction favicon">
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#061A2D"/>
+
+  <!-- Prediction arrow behind the ball -->
+  <path
+    d="M16 41L28 29L37 35L50 19"
+    fill="none"
+    stroke="#38FF9C"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M42 19H50V27"
+    fill="none"
+    stroke="#38FF9C"
+    stroke-width="6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+
+  <!-- Ball smaller and bottom-left -->
+  <g transform="translate(25 43)">
+    <!-- Outer ball -->
+    <circle r="12" fill="#F8FAFC"/>
+    <circle r="12" fill="none" stroke="#D8E2EA" stroke-width="1.2"/>
+
+    <!-- Red panel -->
+    <path
+      d="M-11 -3C-9 -10 -2 -13 4 -11C0 -7 -2 -2 -1 3C-6 2 -10 0 -11 -3Z"
+      fill="#D43C3C"
+    />
+
+    <!-- Blue panel -->
+    <path
+      d="M3 -11C9 -9 12 -4 12 1C8 -1 5 0 1 4C1 -2 2 -7 3 -11Z"
+      fill="#1F8EEA"
+    />
+
+    <!-- Green lower panel -->
+    <path
+      d="M-6 7C-1 5 5 5 10 7C7 11 0 13 -6 10C-8 9 -8 8 -6 7Z"
+      fill="#35A853"
+    />
+
+    <!-- Navy curved separators -->
+    <path
+      d="M-8 -9C-3 -6 -1 -2 -1 3"
+      fill="none"
+      stroke="#14233B"
+      stroke-width="1.4"
+      stroke-linecap="round"
+    />
+    <path
+      d="M3 -10C2 -5 1 -1 -2 4"
+      fill="none"
+      stroke="#14233B"
+      stroke-width="1.4"
+      stroke-linecap="round"
+    />
+    <path
+      d="M-7 8C-1 5 5 5 10 7"
+      fill="none"
+      stroke="#14233B"
+      stroke-width="1.2"
+      stroke-linecap="round"
+    />
+
+    <!-- Central badge -->
+    <rect x="-3.6" y="-5.4" width="7.2" height="10.2" rx="1.6" fill="#EAF7FF"/>
+    <rect x="-2.5" y="-4.2" width="5" height="7.5" rx="1.1" fill="#1F8EEA"/>
+
+    <!-- Simplified trophy-like mark -->
+    <path
+      d="M0 -2.6C1.2 -2.6 2 -1.8 2 -0.8C2 0.3 1.3 1 0.6 1.2V2.3H1.7V3H-1.7V2.3H-0.6V1.2C-1.3 1 -2 0.3 -2 -0.8C-2 -1.8 -1.2 -2.6 0 -2.6Z"
+      fill="#FFFFFF"
+    />
+  </g>
+</svg>
