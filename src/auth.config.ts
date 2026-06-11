@@ -11,13 +11,14 @@
 import type { NextAuthConfig } from 'next-auth';
 
 /**
- * Durée d'inactivité maximale d'une session, en secondes (Exigence 2.5).
+ * Durée maximale d'une session, en secondes (Exigence 2.5).
  *
- * Avec la stratégie JWT et la réémission du token à chaque requête (rolling
- * session), une session inactive pendant 30 minutes expire et exige une
- * nouvelle authentification.
+ * Fixée à 7 jours pour éviter les déconnexions intempestives durant
+ * la Coupe du Monde. Le token JWT est renouvelé toutes les 24h d'activité
+ * (updateAge), ce qui maintient la session active tant que l'utilisateur
+ * revient régulièrement.
  */
-export const SESSION_MAX_AGE_SECONDS = 30 * 60; // 30 minutes
+export const SESSION_MAX_AGE_SECONDS = 7 * 24 * 60 * 60; // 7 jours
 
 /**
  * Préfixes de chemins publics, accessibles sans authentification.
@@ -53,6 +54,7 @@ export const authConfig = {
   session: {
     strategy: 'jwt',
     maxAge: SESSION_MAX_AGE_SECONDS,
+    updateAge: 24 * 60 * 60, // renouvelle le token toutes les 24h d'activité
   },
 
   // Le(s) provider(s) réel(s) sont ajoutés dans src/auth.ts (Node runtime).
