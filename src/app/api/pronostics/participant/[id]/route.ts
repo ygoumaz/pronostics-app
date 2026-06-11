@@ -50,8 +50,9 @@ export async function GET(_request: Request, context: RouteContext) {
       );
     }
 
-    // 3. Récupérer les pronostics du participant ciblé avec le coup d'envoi du
-    //    match associé (nécessaire pour appliquer la confidentialité).
+    // 3. Récupérer les pronostics du participant ciblé avec le coup d'envoi et
+    //    le stage du match associé (nécessaire pour appliquer la confidentialité
+    //    par étape).
     const pronostics = await prisma.pronostic.findMany({
       where: { participantId: targetParticipantId },
       select: {
@@ -60,16 +61,29 @@ export async function GET(_request: Request, context: RouteContext) {
         homeGoals: true,
         awayGoals: true,
         points: true,
-        match: { select: { kickoffTime: true } },
+        match: { select: { kickoffTime: true, stage: true } },
       },
     });
 
-    // 4. Appliquer la confidentialité (Exigence 6.1, 6.2). Lorsqu'on consulte
+    // 4. Calculer le premier coup d'envoi par stage (pour appliquer la règle de
+    //    confidentialité identique à la clôture des saisies : visible dès que
+    //    now >= firstKickoffOfStage - 1h).
+    const firstKickoffByStage = new Map<string, Date>();
+    for (const p of pronostics) {
+      const current = firstKickoffByStage.get(p.match.stage);
+      if (!current || p.match.kickoffTime < current) {
+        firstKickoffByStage.set(p.match.stage, p.match.kickoffTime);
+      }
+    }
+
+    // 5. Appliquer la confidentialité (Exigence 6.1, 6.2). Lorsqu'on consulte
     //    ses propres pronostics, tout est visible (Exigence 6.3).
     const visible = pronostics
-      .filter(
-        (p) => isOwn || canViewOthersPronostic(p.match.kickoffTime, now)
-      )
+      .filter((p) => {
+        if (isOwn) return true;
+        const stageFirst = firstKickoffByStage.get(p.match.stage);
+        return stageFirst ? canViewOthersPronostic(stageFirst, now) : false;
+      })
       .map((p) => ({
         id: p.id,
         matchId: p.matchId,

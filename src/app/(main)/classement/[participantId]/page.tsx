@@ -111,8 +111,9 @@ function sideName(side: SerializedMatch['homeTeam']): string {
 }
 
 /**
- * Construit les groupes de matchs clôturés triés chronologiquement, en joignant
- * chaque match au pronostic correspondant du participant.
+ * Construit les groupes de matchs dont les pronostics sont visibles, triés
+ * chronologiquement, en joignant chaque match au pronostic correspondant du
+ * participant.
  */
 function buildGroups(
   matches: SerializedMatch[],
@@ -122,8 +123,23 @@ function buildGroups(
     pronostics.map((p) => [p.matchId, p])
   );
 
-  // Matchs clôturés uniquement (coup d'envoi atteint) — Exigence 11.4.
-  const closed = matches.filter((m) => m.status !== 'à venir');
+  // Calculer le premier coup d'envoi par stage (même logique que lock.ts).
+  const firstKickoffByStage = new Map<string, number>();
+  for (const m of matches) {
+    const t = new Date(m.kickoffTime).getTime();
+    const current = firstKickoffByStage.get(m.stage);
+    if (current === undefined || t < current) {
+      firstKickoffByStage.set(m.stage, t);
+    }
+  }
+
+  // Matchs dont les pronos sont visibles : now >= firstKickoffOfStage - 1h.
+  const now = Date.now();
+  const LOCK_OFFSET = 60 * 60 * 1000; // 1h
+  const closed = matches.filter((m) => {
+    const first = firstKickoffByStage.get(m.stage);
+    return first !== undefined && now >= first - LOCK_OFFSET;
+  });
 
   // Tri chronologique au sein d'un même groupe (par coup d'envoi croissant).
   const byStage = new Map<SerializedMatch['stage'], MatchRow[]>();
