@@ -318,12 +318,11 @@ export default function PronosticsPage() {
     ) {
       // Par défaut : onglet Récompenses si pas encore clôturé, sinon prochain
       // match à venir, sinon dernière étape présente.
-      const rewardsLocked = recompenses?.locked ?? false;
       setActiveTab(
-        pickDefaultTab(state.matches, presentStages, rewardsLocked)
+        pickDefaultTab(state.matches, presentStages, rewardsEffectiveLocked)
       );
     }
-  }, [state, activeTab, presentStages, recompenses]);
+  }, [state, activeTab, presentStages, rewardsEffectiveLocked]);
 
   // ── Pronostics manquants par étape ───────────────────────────────────────
   const missingByStage = useMemo(() => {
@@ -340,12 +339,20 @@ export default function PronosticsPage() {
     return map;
   }, [matchesByStage, pronostics]);
 
+  // ── Verrou effectif des récompenses (temps écoulé OU API locked) ─────────
+  // Calculé en useMemo pour être partagé avec missingRewards.
+  const rewardsEffectiveLocked = useMemo(() => {
+    if (recompenses?.locked) return true;
+    if (rewardsLockTime !== null && now >= rewardsLockTime) return true;
+    return false;
+  }, [recompenses, rewardsLockTime, now]);
+
   const missingRewards = useMemo(() => {
-    if (!recompenses || recompenses.locked) return 0;
+    if (!recompenses || rewardsEffectiveLocked) return 0;
     return recompenses.rewardTypes.filter(
       (rt) => !rewardSelections[rt]
     ).length;
-  }, [recompenses, rewardSelections]);
+  }, [recompenses, rewardsEffectiveLocked, rewardSelections]);
 
   // ── Score total cumulé (Exigence 10.4) ───────────────────────────────────
   const totalScore = useMemo(() => {
@@ -375,9 +382,8 @@ export default function PronosticsPage() {
 
   const rewardsOpen =
     recompenses !== null &&
-    !recompenses.locked &&
-    rewardsLockTime !== null &&
-    now < rewardsLockTime;
+    !rewardsEffectiveLocked &&
+    rewardsLockTime !== null;
   const rewardsRemainingMs =
     rewardsLockTime !== null ? Math.max(0, rewardsLockTime - now) : 0;
 
@@ -696,15 +702,15 @@ export default function PronosticsPage() {
                 </p>
               ) : (
                 <>
-                  {recompenses.locked && (
+                  {rewardsEffectiveLocked && (
                     <div
                       role="status"
                       className="flex items-center gap-2 rounded-md border border-amber-500/40 bg-amber-50 px-4 py-3 text-sm text-amber-800"
                     >
                       <span aria-hidden="true">🔒</span>
                       <span>
-                        Les pronostics de récompenses sont clôturés depuis la fin
-                        de la Journée 1. Vous ne pouvez plus les modifier.
+                        Les pronostics de récompenses sont clôturés. Vous ne
+                        pouvez plus les modifier.
                       </span>
                     </div>
                   )}
@@ -732,7 +738,7 @@ export default function PronosticsPage() {
                             'rounded-lg border p-4 shadow-sm',
                             selection
                               ? 'border-green-200 bg-green-50'
-                              : recompenses.locked
+                              : rewardsEffectiveLocked
                                 ? 'border-border bg-card'
                                 : 'border-amber-200 bg-amber-50'
                           )}
@@ -753,7 +759,7 @@ export default function PronosticsPage() {
                                 onSelect={(team) =>
                                   void handleFairPlayTeamSelect(team)
                                 }
-                                disabled={recompenses.locked}
+                                disabled={rewardsEffectiveLocked}
                                 describedById={describedById}
                               />
                             ) : (
@@ -764,7 +770,7 @@ export default function PronosticsPage() {
                                 onSelect={(player) =>
                                   void handleRewardSelect(rewardType, player)
                                 }
-                                disabled={recompenses.locked}
+                                disabled={rewardsEffectiveLocked}
                                 describedById={describedById}
                               />
                             )}

@@ -20,7 +20,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ERROR_MESSAGES } from '@/lib/errors';
-import { isRegistrationOpen } from '@/lib/registration';
+import { isStageOpen } from '@/lib/lock';
 import { REWARD_TYPES } from '@/lib/reward-types';
 
 export async function GET() {
@@ -37,7 +37,7 @@ export async function GET() {
   try {
     // 2. Récupération en parallèle : pronostics du participant, vainqueurs
     //    officiels, état de verrouillage (clôture Journée 1).
-    const [predictions, results, registrationOpen] = await Promise.all([
+    const [predictions, results, day1Open] = await Promise.all([
       prisma.rewardPrediction.findMany({
         where: { participantId },
         select: { rewardType: true, playerId: true, teamCode: true, points: true },
@@ -45,12 +45,12 @@ export async function GET() {
       prisma.rewardResult.findMany({
         select: { rewardType: true, playerId: true, teamCode: true },
       }),
-      isRegistrationOpen(),
+      isStageOpen('GROUP_DAY_1'),
     ]);
 
-    // 3. Verrouillage des récompenses : aligné sur la clôture de la Journée 1,
-    //    identique à la clôture des inscriptions (Exigences 18.5 / 18.6).
-    const locked = !registrationOpen;
+    // 3. Verrouillage des récompenses : 1 heure avant le premier match de
+    //    la Journée 1 (Exigences 18.5 / 18.6).
+    const locked = !day1Open;
 
     return NextResponse.json(
       {

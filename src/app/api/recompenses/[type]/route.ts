@@ -6,7 +6,7 @@
 //     - { teamCode: string }  pour FAIR_PLAY (récompense d'équipe)
 //   - Authentification requise (401 sinon).
 //   - `type` doit être un RewardType valide ; sinon 400.
-//   - Verrouillage : si inscriptions closes → 403 + REWARDS_LOCKED.
+//   - Verrouillage : 1 heure avant le premier match de la Journée 1 → 403 + REWARDS_LOCKED.
 //   - Upsert sur (participantId, rewardType).
 //
 // Référence : requirements.md - Exigence 18 (18.2-18.7) ; design.md.
@@ -15,7 +15,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 import { ERROR_MESSAGES } from '@/lib/errors';
-import { isRegistrationOpen } from '@/lib/registration';
+import { isStageOpen } from '@/lib/lock';
 import { isValidRewardType } from '@/lib/reward-types';
 
 interface RouteContext {
@@ -74,8 +74,9 @@ export async function PUT(request: NextRequest, context: RouteContext) {
   }
 
   try {
-    // 4. Verrouillage.
-    const open = await isRegistrationOpen();
+    // 4. Verrouillage : 1 heure avant le premier match de la Journée 1
+    //    (Exigences 18.5 / 18.6).
+    const open = await isStageOpen('GROUP_DAY_1');
     if (!open) {
       return NextResponse.json(
         { error: ERROR_MESSAGES.REWARDS_LOCKED },
