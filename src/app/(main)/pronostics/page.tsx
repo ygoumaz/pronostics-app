@@ -310,6 +310,26 @@ export default function PronosticsPage() {
     [matchesByStage]
   );
 
+  // ── Compte à rebours des récompenses (clôture = 1er match J1 − 1h) ───────
+  const rewardsLockTime = useMemo(() => {
+    if (state.kind !== 'ready') return null;
+    const day1Matches = matchesByStage.get('GROUP_DAY_1') ?? [];
+    if (day1Matches.length === 0) return null;
+    const earliest = Math.min(
+      ...day1Matches.map((m) => new Date(m.kickoffTime).getTime())
+    );
+    return earliest - LOCK_OFFSET_MS;
+  }, [state, matchesByStage]);
+
+  // ── Verrou effectif des récompenses (temps écoulé OU API locked) ─────────
+  // Calculé en useMemo pour être partagé avec missingRewards et le useEffect
+  // de sélection d'onglet par défaut (doit être déclaré avant ce useEffect).
+  const rewardsEffectiveLocked = useMemo(() => {
+    if (recompenses?.locked) return true;
+    if (rewardsLockTime !== null && now >= rewardsLockTime) return true;
+    return false;
+  }, [recompenses, rewardsLockTime, now]);
+
   // ── Sélection de l'onglet par défaut une fois les données chargées ────────
   useEffect(() => {
     if (
@@ -339,14 +359,6 @@ export default function PronosticsPage() {
     return map;
   }, [matchesByStage, pronostics]);
 
-  // ── Verrou effectif des récompenses (temps écoulé OU API locked) ─────────
-  // Calculé en useMemo pour être partagé avec missingRewards.
-  const rewardsEffectiveLocked = useMemo(() => {
-    if (recompenses?.locked) return true;
-    if (rewardsLockTime !== null && now >= rewardsLockTime) return true;
-    return false;
-  }, [recompenses, rewardsLockTime, now]);
-
   const missingRewards = useMemo(() => {
     if (!recompenses || rewardsEffectiveLocked) return 0;
     return recompenses.rewardTypes.filter(
@@ -368,17 +380,6 @@ export default function PronosticsPage() {
     }
     return total;
   }, [pronostics, recompenses]);
-
-  // ── Compte à rebours des récompenses (clôture = 1er match J1 − 1h) ───────
-  const rewardsLockTime = useMemo(() => {
-    if (state.kind !== 'ready') return null;
-    const day1Matches = matchesByStage.get('GROUP_DAY_1') ?? [];
-    if (day1Matches.length === 0) return null;
-    const earliest = Math.min(
-      ...day1Matches.map((m) => new Date(m.kickoffTime).getTime())
-    );
-    return earliest - LOCK_OFFSET_MS;
-  }, [state, matchesByStage]);
 
   const rewardsOpen =
     recompenses !== null &&

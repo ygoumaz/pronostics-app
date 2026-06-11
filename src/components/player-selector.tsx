@@ -17,6 +17,7 @@
 // Entrée pour valider, Échap pour fermer.
 
 import { useEffect, useId, useRef, useState } from "react";
+import Image from "next/image";
 
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -191,12 +192,12 @@ export function PlayerSelector({
           className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-border bg-popover py-1 text-sm shadow-md"
         >
           {loading && (
-            <li className="px-3 py-2 text-muted-foreground" aria-disabled>
+            <li role="option" aria-disabled aria-selected={false} className="px-3 py-2 text-muted-foreground">
               Recherche en cours…
             </li>
           )}
           {!loading && options.length === 0 && (
-            <li className="px-3 py-2 text-muted-foreground" aria-disabled>
+            <li role="option" aria-disabled aria-selected={false} className="px-3 py-2 text-muted-foreground">
               Aucun joueur trouvé.
             </li>
           )}
@@ -222,7 +223,7 @@ export function PlayerSelector({
                   }}
                 >
                   <span className="flex items-center gap-2">
-                    <img
+                    <Image
                       src={`/flags/${player.teamCode.toLowerCase()}.svg`}
                       alt={player.teamCode}
                       width={20}
