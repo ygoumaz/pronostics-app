@@ -261,3 +261,126 @@ export async function propagateQualifiedTeams(
     throw new Error(ERROR_MESSAGES.GROUP_CALC_FAILED, { cause: error });
   }
 }
+
+/**
+ * Logique interne de propagation éliminatoire, exécutée au sein d'une
+ * transaction existante. Détermine le vainqueur du match `matchId`, met à
+ * jour le slot correspondant dans le(s) match(s) suivant(s) et cascade
+ * récursivement si ces matchs disposent déjà d'un résultat officiel
+ * (correction en cours de tournoi).
+ */
+async function propagateKnockoutWinnerInTx(
+  tx: Prisma.TransactionClient,
+  matchId: string
+): Promise<number> {
+  // 1. Charger le match éliminatoire avec ses équipes et son résultat.
+  const match = await tx.match.findUnique({
+    where: { id: matchId },
+    select: {
+      matchNumber: true,
+      homeTeamCode: true,
+      awayTeamCode: true,
+      officialResult: {
+        select: { homeGoals: true, awayGoals: true, penaltyWinner: true },
+      },
+    },
+  });
+
+  if (!match || !match.officialResult) return 0;
+  if (!match.homeTeamCode || !match.awayTeamCode) return 0;
+
+  const { homeGoals, awayGoals, penaltyWinner } = match.officialResult;
+
+  // 2. Identifier l'équipe vainqueur.
+  let winnerTeamCode: string;
+  if (homeGoals > awayGoals) {
+    winnerTeamCode = match.homeTeamCode;
+  } else if (awayGoals > homeGoals) {
+    winnerTeamCode = match.awayTeamCode;
+  } else {
+    // Nul : le vainqueur est déterminé aux tirs au but.
+    if (penaltyWinner === 'HOME') {
+      winnerTeamCode = match.homeTeamCode;
+    } else if (penaltyWinner === 'AWAY') {
+      winnerTeamCode = match.awayTeamCode;
+    } else {
+      return 0; // penaltyWinner absent pour un nul — propagation impossible.
+    }
+  }
+
+  // 3. Construire le placeholder attendu et chercher les matchs qui le référencent.
+  const placeholder = `Vainqueur M${match.matchNumber}`;
+
+  const knockoutMatches = await tx.match.findMany({
+    where: {
+      phase: 'KNOCKOUT',
+      OR: [
+        { homePlaceholder: placeholder },
+        { awayPlaceholder: placeholder },
+      ],
+    },
+    select: {
+      id: true,
+      homePlaceholder: true,
+      awayPlaceholder: true,
+      officialResult: { select: { id: true } },
+    },
+  });
+
+  let updatedSlots = 0;
+
+  for (const km of knockoutMatches) {
+    const data: Prisma.MatchUpdateInput = {};
+
+    // Toujours écraser le slot (y compris en cas de correction d'un résultat
+    // déjà enregistré) afin de garantir la cohérence du tableau.
+    if (km.homePlaceholder === placeholder) {
+      data.homeTeamCode = winnerTeamCode;
+    }
+    if (km.awayPlaceholder === placeholder) {
+      data.awayTeamCode = winnerTeamCode;
+    }
+
+    if (data.homeTeamCode !== undefined || data.awayTeamCode !== undefined) {
+      await tx.match.update({ where: { id: km.id }, data });
+      updatedSlots +=
+        (data.homeTeamCode !== undefined ? 1 : 0) +
+        (data.awayTeamCode !== undefined ? 1 : 0);
+
+      // 4. Cascade : si le match aval a déjà un résultat officiel, re-propager
+      //    son vainqueur (potentiellement mis à jour) vers le tour suivant.
+      if (km.officialResult !== null) {
+        updatedSlots += await propagateKnockoutWinnerInTx(tx, km.id);
+      }
+    }
+  }
+
+  return updatedSlots;
+}
+
+/**
+ * Détermine l'équipe vainqueur d'un match éliminatoire terminé et propage son
+ * code vers le(s) match(s) suivant(s) dont l'emplacement référence ce match
+ * via la notation « Vainqueur M{matchNumber} ». En cas de correction, la
+ * propagation cascade récursivement jusqu'au bout du tableau.
+ *
+ * Comportement transactionnel : l'ensemble de la résolution et des mises à
+ * jour s'exécute dans une seule `prisma.$transaction`. En cas d'erreur, la
+ * transaction est annulée et une erreur portant le message
+ * `KNOCKOUT_PROPAGATION_FAILED` est levée.
+ *
+ * @param matchId identifiant du match éliminatoire dont le résultat vient
+ *        d'être enregistré
+ * @returns le nombre total d'emplacements mis à jour dans le tableau
+ * @throws Error(ERROR_MESSAGES.KNOCKOUT_PROPAGATION_FAILED) si une erreur
+ *         technique survient
+ */
+export async function propagateKnockoutWinner(matchId: string): Promise<number> {
+  try {
+    return await prisma.$transaction(async (tx) => {
+      return propagateKnockoutWinnerInTx(tx, matchId);
+    });
+  } catch (error) {
+    throw new Error(ERROR_MESSAGES.KNOCKOUT_PROPAGATION_FAILED, { cause: error });
+  }
+}

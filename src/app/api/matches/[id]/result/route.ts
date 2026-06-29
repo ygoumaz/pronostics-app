@@ -21,7 +21,7 @@ import { prisma } from '@/lib/prisma';
 import { ERROR_MESSAGES } from '@/lib/errors';
 import { validateGoals } from '@/lib/validation';
 import { calculatePoints } from '@/lib/scoring';
-import { propagateQualifiedTeams } from '@/lib/qualification';
+import { propagateQualifiedTeams, propagateKnockoutWinner } from '@/lib/qualification';
 import { canAccessAdminResource } from '@/lib/authorization';
 
 interface ResultRequestBody {
@@ -197,6 +197,21 @@ export async function POST(
         );
         return NextResponse.json(
           { error: ERROR_MESSAGES.GROUP_CALC_FAILED },
+          { status: 500 }
+        );
+      }
+    }
+
+    if (match.phase === 'KNOCKOUT') {
+      try {
+        await propagateKnockoutWinner(matchId);
+      } catch (knockoutError) {
+        console.error(
+          'Échec de la propagation du vainqueur éliminatoire :',
+          knockoutError
+        );
+        return NextResponse.json(
+          { error: ERROR_MESSAGES.KNOCKOUT_PROPAGATION_FAILED },
           { status: 500 }
         );
       }

@@ -37,6 +37,8 @@ export const ERROR_MESSAGES = {
   TECHNICAL_ERROR: "Une erreur technique est survenue. Veuillez réessayer.",
   GROUP_CALC_FAILED:
     "Le calcul du classement du groupe a échoué. Veuillez vérifier les résultats saisis.",
+  KNOCKOUT_PROPAGATION_FAILED:
+    "La propagation du vainqueur éliminatoire a échoué. Veuillez vérifier les résultats saisis.",
   EXPORT_FAILED: "L'export a échoué. Veuillez réessayer.",
 } as const;
 
