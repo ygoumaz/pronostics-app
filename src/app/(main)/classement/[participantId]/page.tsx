@@ -34,9 +34,12 @@
 // === Lecture seule ===
 // Aucune commande d'édition n'est rendue (Exigence 11.6).
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useParams, useSearchParams } from 'next/navigation';
+import { ChevronDown } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
 
 import type { SerializedMatch } from '@/app/api/matches/serialize';
 import { ERROR_MESSAGES } from '@/lib/errors';
@@ -165,6 +168,20 @@ function buildGroups(
   return groups;
 }
 
+/**
+ * Détermine l'étape active par défaut : la première étape qui contient encore
+ * au moins un match sans résultat officiel ; sinon la dernière étape.
+ */
+function pickActiveStage(groups: StageGroup[]): string | null {
+  if (groups.length === 0) return null;
+  for (const group of groups) {
+    if (group.rows.some(({ match }) => match.officialResult === null)) {
+      return group.stage;
+    }
+  }
+  return groups[groups.length - 1].stage;
+}
+
 export default function ParticipantPronosticsPage() {
   const params = useParams<{ participantId: string }>();
   const searchParams = useSearchParams();
@@ -174,6 +191,16 @@ export default function ParticipantPronosticsPage() {
   const pointsParam = searchParams.get('points');
 
   const [state, setState] = useState<LoadState>({ status: 'loading' });
+  const [openStages, setOpenStages] = useState<Set<string>>(() => new Set());
+
+  const toggleStage = useCallback((stage: string) => {
+    setOpenStages((prev) => {
+      const next = new Set(prev);
+      if (next.has(stage)) next.delete(stage);
+      else next.add(stage);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -202,14 +229,17 @@ export default function ParticipantPronosticsPage() {
         const matchesData = (await matchesRes.json()) as MatchesResponse;
 
         if (!cancelled) {
+          const groups = buildGroups(
+            matchesData.matches ?? [],
+            participantData.pronostics ?? []
+          );
+          const active = pickActiveStage(groups);
           setState({
             status: 'ready',
             displayName: participantData.participant.displayName,
-            groups: buildGroups(
-              matchesData.matches ?? [],
-              participantData.pronostics ?? []
-            ),
+            groups,
           });
+          setOpenStages(new Set(active ? [active] : []));
         }
       } catch {
         if (!cancelled) {
@@ -284,96 +314,119 @@ export default function ParticipantPronosticsPage() {
               Aucun match clôturé pour le moment.
             </p>
           ) : (
-            <div className="space-y-8">
-              {state.groups.map((group) => (
-                <section
-                  key={group.stage}
-                  aria-labelledby={`stage-${group.stage}`}
-                  className="space-y-3"
-                >
-                  <h2
-                    id={`stage-${group.stage}`}
-                    className="text-lg font-semibold text-foreground"
+            <div className="space-y-3">
+              {state.groups.map((group) => {
+                const isOpen = openStages.has(group.stage);
+                return (
+                  <section
+                    key={group.stage}
+                    aria-labelledby={`stage-${group.stage}`}
+                    className="overflow-hidden rounded-lg border border-border"
                   >
-                    {group.label}
-                  </h2>
-                  <div className="overflow-x-auto rounded-lg border border-border">
-                    <table className="w-full border-collapse text-sm">
-                      <caption className="sr-only">
-                        Pronostics de {state.displayName} pour {group.label}
-                      </caption>
-                      <thead>
-                        <tr className="border-b border-border bg-muted/50 text-left">
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-medium text-foreground"
-                          >
-                            Match
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-medium text-foreground"
-                          >
-                            Pronostic
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 font-medium text-foreground"
-                          >
-                            Résultat
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-4 py-3 text-right font-medium text-foreground"
-                          >
-                            Points
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {group.rows.map(({ match, pronostic }) => {
-                          const result = match.officialResult;
-                          return (
-                            <tr
-                              key={match.id}
-                              className="border-b border-border last:border-0"
-                            >
+                    <button
+                      type="button"
+                      onClick={() => toggleStage(group.stage)}
+                      aria-expanded={isOpen}
+                      aria-controls={`stage-${group.stage}-content`}
+                      className="flex w-full items-center justify-between bg-muted/30 px-4 py-3 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    >
+                      <h2
+                        id={`stage-${group.stage}`}
+                        className="text-lg font-semibold text-foreground"
+                      >
+                        {group.label}
+                      </h2>
+                      <ChevronDown
+                        className={cn(
+                          'h-5 w-5 text-muted-foreground transition-transform duration-200',
+                          isOpen && 'rotate-180'
+                        )}
+                        aria-hidden="true"
+                      />
+                    </button>
+                    {isOpen && (
+                      <div
+                        id={`stage-${group.stage}-content`}
+                        className="overflow-x-auto border-t border-border"
+                      >
+                        <table className="w-full border-collapse text-sm">
+                          <caption className="sr-only">
+                            Pronostics de {state.displayName} pour {group.label}
+                          </caption>
+                          <thead>
+                            <tr className="border-b border-border bg-muted/50 text-left">
                               <th
-                                scope="row"
-                                className="px-4 py-3 text-left font-normal text-foreground"
+                                scope="col"
+                                className="px-4 py-3 font-medium text-foreground"
                               >
-                                {sideName(match.homeTeam)} –{' '}
-                                {sideName(match.awayTeam)}
+                                Match
                               </th>
-                              <td className="px-4 py-3 tabular-nums text-foreground">
-                                {pronostic ? (
-                                  `${pronostic.homeGoals} – ${pronostic.awayGoals}`
-                                ) : (
-                                  <span className="text-muted-foreground">
-                                    aucun pronostic
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-3 tabular-nums text-foreground">
-                                {result ? (
-                                  `${result.homeGoals} – ${result.awayGoals}`
-                                ) : (
-                                  <span className="text-muted-foreground">—</span>
-                                )}
-                              </td>
-                              <td className="px-4 py-3 text-right tabular-nums text-foreground">
-                                {result && pronostic?.points != null
-                                  ? pronostic.points
-                                  : '—'}
-                              </td>
+                              <th
+                                scope="col"
+                                className="px-4 py-3 font-medium text-foreground"
+                              >
+                                Pronostic
+                              </th>
+                              <th
+                                scope="col"
+                                className="px-4 py-3 font-medium text-foreground"
+                              >
+                                Résultat
+                              </th>
+                              <th
+                                scope="col"
+                                className="px-4 py-3 text-right font-medium text-foreground"
+                              >
+                                Points
+                              </th>
                             </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-              ))}
+                          </thead>
+                          <tbody>
+                            {group.rows.map(({ match, pronostic }) => {
+                              const result = match.officialResult;
+                              return (
+                                <tr
+                                  key={match.id}
+                                  className="border-b border-border last:border-0"
+                                >
+                                  <th
+                                    scope="row"
+                                    className="px-4 py-3 text-left font-normal text-foreground"
+                                  >
+                                    {sideName(match.homeTeam)} –{' '}
+                                    {sideName(match.awayTeam)}
+                                  </th>
+                                  <td className="px-4 py-3 tabular-nums text-foreground">
+                                    {pronostic ? (
+                                      `${pronostic.homeGoals} – ${pronostic.awayGoals}`
+                                    ) : (
+                                      <span className="text-muted-foreground">
+                                        aucun pronostic
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td className="px-4 py-3 tabular-nums text-foreground">
+                                    {result ? (
+                                      `${result.homeGoals} – ${result.awayGoals}`
+                                    ) : (
+                                      <span className="text-muted-foreground">—</span>
+                                    )}
+                                  </td>
+                                  <td className="px-4 py-3 text-right tabular-nums text-foreground">
+                                    {result && pronostic?.points != null
+                                      ? pronostic.points
+                                      : '—'}
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </section>
+                );
+              })}
             </div>
           )}
         </>

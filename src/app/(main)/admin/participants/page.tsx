@@ -30,6 +30,9 @@ import { useSession } from 'next-auth/react';
 
 import type { SerializedMatch } from '@/app/api/matches/serialize';
 import type { RankingEntry, Stage } from '@/types';
+import { ChevronDown } from 'lucide-react';
+
+import { cn } from '@/lib/utils';
 import { ERROR_MESSAGES } from '@/lib/errors';
 import { ScoreIndicator } from '@/components/score-indicator';
 import { STAGE_LABELS, STAGE_ORDER } from '@/components/navigation-stages';
@@ -204,6 +207,20 @@ function buildGroups(
   return groups;
 }
 
+/**
+ * Détermine l'étape active par défaut : la première étape qui contient encore
+ * au moins un match sans résultat officiel ; sinon la dernière étape.
+ */
+function pickActiveStage(groups: StageGroup[]): string | null {
+  if (groups.length === 0) return null;
+  for (const group of groups) {
+    if (group.rows.some(({ match }) => match.officialResult === null)) {
+      return group.stage;
+    }
+  }
+  return groups[groups.length - 1].stage;
+}
+
 export default function AdminParticipantsPage() {
   const { data: session, status: sessionStatus } = useSession();
   const isAdmin = session?.user?.isAdmin ?? false;
@@ -213,6 +230,16 @@ export default function AdminParticipantsPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [playerLabels, setPlayerLabels] = useState<Record<string, string>>({});
   const [teamLabels, setTeamLabels] = useState<Record<string, string>>({});
+  const [openSections, setOpenSections] = useState<Set<string>>(() => new Set());
+
+  const toggleSection = useCallback((key: string) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      return next;
+    });
+  }, []);
 
   // Chargement de la liste des participants (administrateur uniquement).
   const loadList = useCallback(async () => {
@@ -272,13 +299,24 @@ export default function AdminParticipantsPage() {
         setTeamLabels(tLabels);
       }
 
+      const groups = buildGroups(data.matches ?? [], data.pronostics ?? []);
+      const active = pickActiveStage(groups);
+      const rewardTypes = data.rewardTypes ?? [];
+      const rewardResults = data.rewardResults ?? [];
+      const rewardsIncomplete =
+        rewardTypes.length > 0 &&
+        rewardTypes.some((t) => !rewardResults.find((r) => r.rewardType === t));
+      const initialOpen = new Set<string>();
+      if (rewardsIncomplete) initialOpen.add('__REWARDS__');
+      if (active) initialOpen.add(active);
+      setOpenSections(initialOpen);
       setDetailState({
         status: 'ready',
         header: data.participant,
-        groups: buildGroups(data.matches ?? [], data.pronostics ?? []),
-        rewardTypes: data.rewardTypes ?? [],
+        groups,
+        rewardTypes,
         rewardPredictions: data.rewardPredictions ?? [],
-        rewardResults: data.rewardResults ?? [],
+        rewardResults,
       });
     } catch {
       setDetailState({ status: 'error', message: ERROR_MESSAGES.TECHNICAL_ERROR });
@@ -496,102 +534,122 @@ export default function AdminParticipantsPage() {
               {detailState.rewardTypes.length > 0 && (
                 <section
                   aria-labelledby="admin-detail-general"
-                  className="space-y-3"
+                  className="overflow-hidden rounded-lg border border-border"
                 >
-                  <h3
-                    id="admin-detail-general"
-                    className="text-lg font-semibold text-foreground"
+                  <button
+                    type="button"
+                    onClick={() => toggleSection('__REWARDS__')}
+                    aria-expanded={openSections.has('__REWARDS__')}
+                    aria-controls="admin-detail-general-content"
+                    className="flex w-full items-center justify-between bg-muted/30 px-4 py-3 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   >
-                    Général
-                  </h3>
-                  <div className="overflow-x-auto rounded-lg border border-border">
-                    <table className="w-full border-collapse text-sm">
-                      <caption className="sr-only">
-                        Pronostics récompenses de {detailState.header.displayName}
-                      </caption>
-                      <thead>
-                        <tr className="border-b border-border bg-muted/50 text-left">
-                          <th scope="col" className="px-4 py-3 font-medium text-foreground">
-                            Récompense
-                          </th>
-                          <th scope="col" className="px-4 py-3 font-medium text-foreground">
-                            Pronostic
-                          </th>
-                          <th scope="col" className="px-4 py-3 font-medium text-foreground">
-                            Vainqueur officiel
-                          </th>
-                          <th scope="col" className="px-4 py-3 font-medium text-foreground">
-                            Points
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {detailState.rewardTypes.map((rewardType) => {
-                          const emoji = REWARD_EMOJIS[rewardType] ?? '';
-                          const label = `${emoji} ${REWARD_LABELS[rewardType] ?? rewardType}`.trim();
-                          const prediction = detailState.rewardPredictions.find(
-                            (p) => p.rewardType === rewardType
-                          );
-                          const result = detailState.rewardResults.find(
-                            (r) => r.rewardType === rewardType
-                          );
-                          const hasPoints =
-                            result !== undefined && prediction?.points != null;
+                    <h3
+                      id="admin-detail-general"
+                      className="text-lg font-semibold text-foreground"
+                    >
+                      Général
+                    </h3>
+                    <ChevronDown
+                      className={cn(
+                        'h-5 w-5 text-muted-foreground transition-transform duration-200',
+                        openSections.has('__REWARDS__') && 'rotate-180'
+                      )}
+                      aria-hidden="true"
+                    />
+                  </button>
+                  {openSections.has('__REWARDS__') && (
+                    <div
+                      id="admin-detail-general-content"
+                      className="overflow-x-auto border-t border-border"
+                    >
+                      <table className="w-full border-collapse text-sm">
+                        <caption className="sr-only">
+                          Pronostics récompenses de {detailState.header.displayName}
+                        </caption>
+                        <thead>
+                          <tr className="border-b border-border bg-muted/50 text-left">
+                            <th scope="col" className="px-4 py-3 font-medium text-foreground">
+                              Récompense
+                            </th>
+                            <th scope="col" className="px-4 py-3 font-medium text-foreground">
+                              Pronostic
+                            </th>
+                            <th scope="col" className="px-4 py-3 font-medium text-foreground">
+                              Vainqueur officiel
+                            </th>
+                            <th scope="col" className="px-4 py-3 font-medium text-foreground">
+                              Points
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {detailState.rewardTypes.map((rewardType) => {
+                            const emoji = REWARD_EMOJIS[rewardType] ?? '';
+                            const label = `${emoji} ${REWARD_LABELS[rewardType] ?? rewardType}`.trim();
+                            const prediction = detailState.rewardPredictions.find(
+                              (p) => p.rewardType === rewardType
+                            );
+                            const result = detailState.rewardResults.find(
+                              (r) => r.rewardType === rewardType
+                            );
+                            const hasPoints =
+                              result !== undefined && prediction?.points != null;
 
-                          return (
-                            <tr
-                              key={rewardType}
-                              className="border-b border-border last:border-0"
-                            >
-                              <th
-                                scope="row"
-                                className="px-4 py-3 text-left font-normal text-foreground"
+                            return (
+                              <tr
+                                key={rewardType}
+                                className="border-b border-border last:border-0"
                               >
-                                {label}
-                              </th>
-                              <td className="px-4 py-3 text-foreground">
-                                {prediction ? (
-                                  <span className="font-medium">
-                                    {prediction.teamCode
-                                      ? (teamLabels[prediction.teamCode] ?? prediction.teamCode)
-                                      : prediction.playerId
-                                        ? (playerLabels[prediction.playerId] ?? prediction.playerId)
-                                        : '—'}
-                                  </span>
-                                ) : (
-                                  <span className="text-muted-foreground">
-                                    aucun pronostic
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-3 text-foreground">
-                                {result ? (
-                                  <span className="font-medium">
-                                    {result.teamCode
-                                      ? (teamLabels[result.teamCode] ?? result.teamCode)
-                                      : result.playerId
-                                        ? (playerLabels[result.playerId] ?? result.playerId)
-                                        : '—'}
-                                  </span>
-                                ) : (
-                                  <span className="text-muted-foreground">
-                                    non désigné
-                                  </span>
-                                )}
-                              </td>
-                              <td className="px-4 py-3">
-                                {hasPoints ? (
-                                  <ScoreIndicator points={prediction!.points!} />
-                                ) : (
-                                  <span className="text-muted-foreground">—</span>
-                                )}
-                              </td>
-                            </tr>
-                          );
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
+                                <th
+                                  scope="row"
+                                  className="px-4 py-3 text-left font-normal text-foreground"
+                                >
+                                  {label}
+                                </th>
+                                <td className="px-4 py-3 text-foreground">
+                                  {prediction ? (
+                                    <span className="font-medium">
+                                      {prediction.teamCode
+                                        ? (teamLabels[prediction.teamCode] ?? prediction.teamCode)
+                                        : prediction.playerId
+                                          ? (playerLabels[prediction.playerId] ?? prediction.playerId)
+                                          : '—'}
+                                    </span>
+                                  ) : (
+                                    <span className="text-muted-foreground">
+                                      aucun pronostic
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-3 text-foreground">
+                                  {result ? (
+                                    <span className="font-medium">
+                                      {result.teamCode
+                                        ? (teamLabels[result.teamCode] ?? result.teamCode)
+                                        : result.playerId
+                                          ? (playerLabels[result.playerId] ?? result.playerId)
+                                          : '—'}
+                                    </span>
+                                  ) : (
+                                    <span className="text-muted-foreground">
+                                      non désigné
+                                    </span>
+                                  )}
+                                </td>
+                                <td className="px-4 py-3">
+                                  {hasPoints ? (
+                                    <ScoreIndicator points={prediction!.points!} />
+                                  ) : (
+                                    <span className="text-muted-foreground">—</span>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </section>
               )}
 
@@ -600,117 +658,140 @@ export default function AdminParticipantsPage() {
                   Aucun match à afficher.
                 </p>
               ) : (
-                <div className="space-y-8">
-                  {detailState.groups.map((group) => (
-                    <section
-                      key={group.stage}
-                      aria-labelledby={`admin-stage-${group.stage}`}
-                      className="space-y-3"
-                    >
-                      <h3
-                        id={`admin-stage-${group.stage}`}
-                        className="text-lg font-semibold text-foreground"
+                <div className="space-y-3">
+                  {detailState.groups.map((group) => {
+                    const isOpen = openSections.has(group.stage);
+                    return (
+                      <section
+                        key={group.stage}
+                        aria-labelledby={`admin-stage-${group.stage}`}
+                        className="overflow-hidden rounded-lg border border-border"
                       >
-                        {group.label}
-                      </h3>
-                      <div className="overflow-x-auto rounded-lg border border-border">
-                        <table className="w-full border-collapse text-sm">
-                          <caption className="sr-only">
-                            Pronostics de {detailState.header.displayName} pour{' '}
+                        <button
+                          type="button"
+                          onClick={() => toggleSection(group.stage)}
+                          aria-expanded={isOpen}
+                          aria-controls={`admin-stage-${group.stage}-content`}
+                          className="flex w-full items-center justify-between bg-muted/30 px-4 py-3 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                        >
+                          <h3
+                            id={`admin-stage-${group.stage}`}
+                            className="text-lg font-semibold text-foreground"
+                          >
                             {group.label}
-                          </caption>
-                          <thead>
-                            <tr className="border-b border-border bg-muted/50 text-left">
-                              <th
-                                scope="col"
-                                className="px-4 py-3 font-medium text-foreground"
-                              >
-                                Match
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-4 py-3 font-medium text-foreground"
-                              >
-                                Pronostic
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-4 py-3 font-medium text-foreground"
-                              >
-                                Résultat
-                              </th>
-                              <th
-                                scope="col"
-                                className="px-4 py-3 font-medium text-foreground"
-                              >
-                                Points
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {group.rows.map(({ match, pronostic }) => {
-                              const result = match.officialResult;
-                              const hasResult = result !== null;
-                              const hasPoints =
-                                hasResult && pronostic?.points != null;
-                              return (
-                                <tr
-                                  key={match.id}
-                                  className="border-b border-border last:border-0"
-                                >
+                          </h3>
+                          <ChevronDown
+                            className={cn(
+                              'h-5 w-5 text-muted-foreground transition-transform duration-200',
+                              isOpen && 'rotate-180'
+                            )}
+                            aria-hidden="true"
+                          />
+                        </button>
+                        {isOpen && (
+                          <div
+                            id={`admin-stage-${group.stage}-content`}
+                            className="overflow-x-auto border-t border-border"
+                          >
+                            <table className="w-full border-collapse text-sm">
+                              <caption className="sr-only">
+                                Pronostics de {detailState.header.displayName} pour{' '}
+                                {group.label}
+                              </caption>
+                              <thead>
+                                <tr className="border-b border-border bg-muted/50 text-left">
                                   <th
-                                    scope="row"
-                                    className="px-4 py-3 text-left font-normal text-foreground"
+                                    scope="col"
+                                    className="px-4 py-3 font-medium text-foreground"
                                   >
-                                    {sideName(match.homeTeam)} –{' '}
-                                    {sideName(match.awayTeam)}
+                                    Match
                                   </th>
-                                  <td className="px-4 py-3 tabular-nums text-foreground">
-                                    {pronostic ? (
-                                      `${pronostic.homeGoals} – ${pronostic.awayGoals}`
-                                    ) : (
-                                      <span className="text-muted-foreground">
-                                        aucun pronostic
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="px-4 py-3 tabular-nums text-foreground">
-                                    {result ? (
-                                      <>
-                                        {result.homeGoals} – {result.awayGoals}
-                                        {result.penaltyWinner && (
-                                          <span className="ml-1 text-xs text-muted-foreground">
-                                            (TAB :{' '}
-                                            {result.penaltyWinner === 'HOME'
-                                              ? sideName(match.homeTeam)
-                                              : sideName(match.awayTeam)}
-                                            )
+                                  <th
+                                    scope="col"
+                                    className="px-4 py-3 font-medium text-foreground"
+                                  >
+                                    Pronostic
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    className="px-4 py-3 font-medium text-foreground"
+                                  >
+                                    Résultat
+                                  </th>
+                                  <th
+                                    scope="col"
+                                    className="px-4 py-3 font-medium text-foreground"
+                                  >
+                                    Points
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {group.rows.map(({ match, pronostic }) => {
+                                  const result = match.officialResult;
+                                  const hasResult = result !== null;
+                                  const hasPoints =
+                                    hasResult && pronostic?.points != null;
+                                  return (
+                                    <tr
+                                      key={match.id}
+                                      className="border-b border-border last:border-0"
+                                    >
+                                      <th
+                                        scope="row"
+                                        className="px-4 py-3 text-left font-normal text-foreground"
+                                      >
+                                        {sideName(match.homeTeam)} –{' '}
+                                        {sideName(match.awayTeam)}
+                                      </th>
+                                      <td className="px-4 py-3 tabular-nums text-foreground">
+                                        {pronostic ? (
+                                          `${pronostic.homeGoals} – ${pronostic.awayGoals}`
+                                        ) : (
+                                          <span className="text-muted-foreground">
+                                            aucun pronostic
                                           </span>
                                         )}
-                                      </>
-                                    ) : (
-                                      <span className="text-muted-foreground">
-                                        non disponible
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="px-4 py-3">
-                                    {hasPoints ? (
-                                      <ScoreIndicator points={pronostic!.points!} />
-                                    ) : (
-                                      <span className="text-muted-foreground">
-                                        —
-                                      </span>
-                                    )}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    </section>
-                  ))}
+                                      </td>
+                                      <td className="px-4 py-3 tabular-nums text-foreground">
+                                        {result ? (
+                                          <>
+                                            {result.homeGoals} – {result.awayGoals}
+                                            {result.penaltyWinner && (
+                                              <span className="ml-1 text-xs text-muted-foreground">
+                                                (TAB :{' '}
+                                                {result.penaltyWinner === 'HOME'
+                                                  ? sideName(match.homeTeam)
+                                                  : sideName(match.awayTeam)}
+                                                )
+                                              </span>
+                                            )}
+                                          </>
+                                        ) : (
+                                          <span className="text-muted-foreground">
+                                            non disponible
+                                          </span>
+                                        )}
+                                      </td>
+                                      <td className="px-4 py-3">
+                                        {hasPoints ? (
+                                          <ScoreIndicator points={pronostic!.points!} />
+                                        ) : (
+                                          <span className="text-muted-foreground">
+                                            —
+                                          </span>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </section>
+                    );
+                  })}
                 </div>
               )}
             </>
