@@ -12,6 +12,7 @@
 // évidence l'entrée active, et un état local pour le menu hamburger mobile.
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -77,12 +78,15 @@ export function MainNav({ isAdmin, displayName }: MainNavProps) {
         aria-label="Navigation principale"
         className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3"
       >
-        <Link
-          href="/calendrier"
-          className="rounded-md text-base font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        >
-          Pronostics CDM 2026
-        </Link>
+        <div className="flex items-center gap-2">
+          <Image src="/favicon.svg" alt="" width={28} height={28} aria-hidden="true" />
+          <Link
+            href="/calendrier"
+            className="rounded-md text-base font-bold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            Pronostics CDM 2026
+          </Link>
+        </div>
 
         {/* Menu permanent : bureau et tablette (>= 768 px). */}
         <ul className="hidden items-center gap-1 md:flex">
