@@ -264,8 +264,10 @@ export async function propagateQualifiedTeams(
 
 /**
  * Logique interne de propagation éliminatoire, exécutée au sein d'une
- * transaction existante. Détermine le vainqueur du match `matchId`, met à
- * jour le slot correspondant dans le(s) match(s) suivant(s) et cascade
+ * transaction existante. Détermine le vainqueur ET le perdant du match
+ * `matchId`, met à jour les slots correspondants dans le(s) match(s) suivant(s)
+ * — qu'ils référencent « Vainqueur M{N} » (tour suivant) ou « Perdant M{N} »
+ * (match pour la troisième place, alimenté par les demi-finales) — et cascade
  * récursivement si ces matchs disposent déjà d'un résultat officiel
  * (correction en cours de tournoi).
  */
@@ -291,32 +293,43 @@ async function propagateKnockoutWinnerInTx(
 
   const { homeGoals, awayGoals, penaltyWinner } = match.officialResult;
 
-  // 2. Identifier l'équipe vainqueur.
+  // 2. Identifier l'équipe vainqueur ET l'équipe perdante (Exigence 3 : le
+  //    match pour la troisième place référence les perdants des demi-finales
+  //    via « Perdant M{N} »).
   let winnerTeamCode: string;
+  let loserTeamCode: string;
   if (homeGoals > awayGoals) {
     winnerTeamCode = match.homeTeamCode;
+    loserTeamCode = match.awayTeamCode;
   } else if (awayGoals > homeGoals) {
     winnerTeamCode = match.awayTeamCode;
+    loserTeamCode = match.homeTeamCode;
   } else {
     // Nul : le vainqueur est déterminé aux tirs au but.
     if (penaltyWinner === 'HOME') {
       winnerTeamCode = match.homeTeamCode;
+      loserTeamCode = match.awayTeamCode;
     } else if (penaltyWinner === 'AWAY') {
       winnerTeamCode = match.awayTeamCode;
+      loserTeamCode = match.homeTeamCode;
     } else {
       return 0; // penaltyWinner absent pour un nul — propagation impossible.
     }
   }
 
-  // 3. Construire le placeholder attendu et chercher les matchs qui le référencent.
-  const placeholder = `Vainqueur M${match.matchNumber}`;
+  // 3. Construire les placeholders attendus et chercher les matchs qui les
+  //    référencent (vainqueur -> tour suivant, perdant -> petite finale).
+  const winnerPlaceholder = `Vainqueur M${match.matchNumber}`;
+  const loserPlaceholder = `Perdant M${match.matchNumber}`;
 
   const knockoutMatches = await tx.match.findMany({
     where: {
       phase: 'KNOCKOUT',
       OR: [
-        { homePlaceholder: placeholder },
-        { awayPlaceholder: placeholder },
+        { homePlaceholder: winnerPlaceholder },
+        { awayPlaceholder: winnerPlaceholder },
+        { homePlaceholder: loserPlaceholder },
+        { awayPlaceholder: loserPlaceholder },
       ],
     },
     select: {
@@ -334,11 +347,15 @@ async function propagateKnockoutWinnerInTx(
 
     // Toujours écraser le slot (y compris en cas de correction d'un résultat
     // déjà enregistré) afin de garantir la cohérence du tableau.
-    if (km.homePlaceholder === placeholder) {
+    if (km.homePlaceholder === winnerPlaceholder) {
       data.homeTeamCode = winnerTeamCode;
+    } else if (km.homePlaceholder === loserPlaceholder) {
+      data.homeTeamCode = loserTeamCode;
     }
-    if (km.awayPlaceholder === placeholder) {
+    if (km.awayPlaceholder === winnerPlaceholder) {
       data.awayTeamCode = winnerTeamCode;
+    } else if (km.awayPlaceholder === loserPlaceholder) {
+      data.awayTeamCode = loserTeamCode;
     }
 
     if (data.homeTeamCode !== undefined || data.awayTeamCode !== undefined) {
@@ -348,7 +365,8 @@ async function propagateKnockoutWinnerInTx(
         (data.awayTeamCode !== undefined ? 1 : 0);
 
       // 4. Cascade : si le match aval a déjà un résultat officiel, re-propager
-      //    son vainqueur (potentiellement mis à jour) vers le tour suivant.
+      //    son vainqueur/perdant (potentiellement mis à jour) vers le tour
+      //    suivant.
       if (km.officialResult !== null) {
         updatedSlots += await propagateKnockoutWinnerInTx(tx, km.id);
       }
@@ -359,9 +377,11 @@ async function propagateKnockoutWinnerInTx(
 }
 
 /**
- * Détermine l'équipe vainqueur d'un match éliminatoire terminé et propage son
- * code vers le(s) match(s) suivant(s) dont l'emplacement référence ce match
- * via la notation « Vainqueur M{matchNumber} ». En cas de correction, la
+ * Détermine l'équipe vainqueur ET l'équipe perdante d'un match éliminatoire
+ * terminé et propage leurs codes vers le(s) match(s) suivant(s) dont
+ * l'emplacement référence ce match, via la notation « Vainqueur M{matchNumber} »
+ * (tour suivant) ou « Perdant M{matchNumber} » (match pour la troisième place,
+ * alimenté par les perdants des demi-finales). En cas de correction, la
  * propagation cascade récursivement jusqu'au bout du tableau.
  *
  * Comportement transactionnel : l'ensemble de la résolution et des mises à
