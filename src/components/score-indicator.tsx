@@ -14,6 +14,7 @@
 // puisse identifier le niveau (WCAG 1.4.1 — Use of Color).
 
 import { cn } from '@/lib/utils';
+import { REWARD_CORRECT_POINTS } from '@/lib/reward-scoring';
 
 /** Description visuelle d'un niveau de réussite. */
 interface LevelInfo {
@@ -98,3 +99,53 @@ export const BAREME_LINES = [
   '2 pts : bonne différence de buts',
   '1 pt : bonne issue · 0 sinon',
 ] as const;
+
+interface RewardScoreIndicatorProps {
+  /** Points obtenus pour le pronostic de récompense (0 ou 5). */
+  points: number;
+  className?: string;
+}
+
+/**
+ * Affiche un badge distinctif (couleur + icône + libellé + points) pour le
+ * résultat d'un pronostic de récompense individuelle évalué (Exigences 18.9,
+ * 18.10 : 5 points bonus si correct, 0 sinon). Ce barème est distinct de celui
+ * des pronostics de match (0 à 3 points, voir `ScoreIndicator` ci-dessus) et
+ * NE DOIT PAS être bornée à [0, 3] sous peine d'afficher un score erroné.
+ */
+export function RewardScoreIndicator({
+  points,
+  className,
+}: RewardScoreIndicatorProps) {
+  // Borne défensive : le barème récompense ne connaît que 0 ou 5 points.
+  const safePoints = points >= REWARD_CORRECT_POINTS ? REWARD_CORRECT_POINTS : 0;
+  const isCorrect = safePoints === REWARD_CORRECT_POINTS;
+  const level: LevelInfo = isCorrect
+    ? {
+        label: 'Bon pronostic',
+        icon: '🎯',
+        className: 'border-emerald-300 bg-emerald-100 text-emerald-900',
+      }
+    : {
+        label: 'Manqué',
+        icon: '✗',
+        className: 'border-slate-300 bg-slate-100 text-slate-700',
+      };
+  const pointsLabel = safePoints > 1 ? 'points' : 'point';
+
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold',
+        level.className,
+        className
+      )}
+    >
+      <span aria-hidden="true">{level.icon}</span>
+      <span>{level.label}</span>
+      <span className="tabular-nums">
+        ({safePoints}&nbsp;{pointsLabel})
+      </span>
+    </span>
+  );
+}

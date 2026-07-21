@@ -34,7 +34,7 @@ import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { ERROR_MESSAGES } from '@/lib/errors';
-import { ScoreIndicator } from '@/components/score-indicator';
+import { ScoreIndicator, RewardScoreIndicator } from '@/components/score-indicator';
 import { STAGE_LABELS, STAGE_ORDER } from '@/components/navigation-stages';
 
 /** Pronostic d'un participant (sans détail du match). */
@@ -638,7 +638,7 @@ export default function AdminParticipantsPage() {
                                 </td>
                                 <td className="px-4 py-3">
                                   {hasPoints ? (
-                                    <ScoreIndicator points={prediction!.points!} />
+                                    <RewardScoreIndicator points={prediction!.points!} />
                                   ) : (
                                     <span className="text-muted-foreground">—</span>
                                   )}
